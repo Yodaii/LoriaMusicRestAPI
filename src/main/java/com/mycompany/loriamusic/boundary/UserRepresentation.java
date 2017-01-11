@@ -40,16 +40,16 @@ public class UserRepresentation {
     
      //GET une instance
     @GetMapping(value="/{userid}")
-    public ResponseEntity<?> getOneUser(@PathVariable("userid") Long id){
+    public ResponseEntity<?> getOneUser(@PathVariable("userid") String id){
         return Optional.ofNullable(ur.findOne(id))
                 .map(found -> new ResponseEntity(userToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
      //UPDATE PUT
-    @PutMapping(value="/{userid}")
-    public ResponseEntity<?> updateUser(@RequestBody User u, @PathVariable("userid") Long id){
-        u.setId_user(id);
+    @PutMapping(value="/{email}")
+    public ResponseEntity<?> updateUser(@RequestBody User u, @PathVariable("email") String id){
+        u.setEmail(id);
         User user = ur.save(u);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -61,7 +61,7 @@ public class UserRepresentation {
         User saved = ur.save(u);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)
-                .slash(saved.getId_user())
+                .slash(saved.getEmail())
                 .toUri());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
@@ -76,7 +76,7 @@ public class UserRepresentation {
     
     private Resource<User> userToResource(User u, Boolean collection){
         Link selfLink = linkTo(UserRepresentation.class)
-                .slash(u.getId_user())
+                .slash(u.getEmail())
                 .withSelfRel();
         if(collection){
             Link collectionLink = linkTo(methodOn(UserRepresentation.class).getAllUsers())

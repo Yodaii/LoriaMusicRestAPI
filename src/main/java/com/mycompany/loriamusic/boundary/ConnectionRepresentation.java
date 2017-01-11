@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,16 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @ExposesResourceFor(User.class)
 public class ConnectionRepresentation {
     @Autowired
-    ConnectionResource cr;
+    UserResource cr;
     
     //POST
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
-    public ResponseEntity<?> saveUser(@RequestBody User u){
-        User saved = cr.save(u);
+    public ResponseEntity<?> getUser(@RequestBody User u){
+        User exist = cr.getOne(u.getEmail());
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)
-                .slash(saved.getId_user())
+                .slash(exist.getEmail())
                 .toUri());
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+        
+        
     }
 }

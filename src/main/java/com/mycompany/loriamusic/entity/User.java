@@ -13,9 +13,8 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_user")
-    private long id_user;
+    @Column(name = "email", length = 100)
+    private String email;
     
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;
@@ -23,8 +22,7 @@ public class User {
     @Column(name = "prenom", nullable = false, length = 100)
     private String prenom;
     
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
+    
     
     @Column(name = "mot_de_passe", nullable = false, length = 100)
     private String mdp;
@@ -32,13 +30,6 @@ public class User {
     public User() {
     }
 
-    public long getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(long id) {
-        this.id_user = id;
-    }
 
     public String getNom() {
         return nom;
