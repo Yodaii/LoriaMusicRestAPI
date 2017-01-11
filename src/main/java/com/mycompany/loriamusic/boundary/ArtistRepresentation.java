@@ -38,17 +38,17 @@ public class ArtistRepresentation {
     }
     
      //GET une instance
-    @GetMapping(value="/{artistid}")
-    public ResponseEntity<?> getOneArtist(@PathVariable("artistid") Long id){
-        return Optional.ofNullable(ar.findOne(id))
+    @GetMapping(value="/{artistnom}")
+    public ResponseEntity<?> getOneArtist(@PathVariable("artistnom") String nom){
+        return Optional.ofNullable(ar.findOne(nom))
                 .map(found -> new ResponseEntity(artistToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
      //UPDATE PUT
-    @PutMapping(value="/{artistid}")
-    public ResponseEntity<?> updateArtist(@RequestBody Artist a, @PathVariable("artistid") Long id){
-        a.setId_artist(id);
+    @PutMapping(value="/{artistnom}")
+    public ResponseEntity<?> updateArtist(@RequestBody Artist a, @PathVariable("artistnom") String nom){
+        a.setNom(nom);
         Artist artist = ar.save(a);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -59,7 +59,7 @@ public class ArtistRepresentation {
         Artist saved = ar.save(a);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(ArtistRepresentation.class)
-                .slash(saved.getId_artist())
+                .slash(saved.getNom())
                 .toUri());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
@@ -74,7 +74,7 @@ public class ArtistRepresentation {
     
     private Resource<Artist> artistToResource(Artist a, Boolean collection){
         Link selfLink = linkTo(ArtistRepresentation.class)
-                .slash(a.getId_artist())
+                .slash(a.getNom())
                 .withSelfRel();
         if(collection){
             Link collectionLink = linkTo(methodOn(ArtistRepresentation.class).getAllArtists())

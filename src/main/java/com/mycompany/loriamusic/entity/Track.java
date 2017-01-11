@@ -1,5 +1,6 @@
 package com.mycompany.loriamusic.entity;
 
+import java.io.IOException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,25 +17,24 @@ import javax.validation.constraints.NotNull;
 public class Track {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_track")
-    private long id_track;
-    
+    private String id_track;
+
     @Column(name = "titre", nullable = false, length = 100)
     private String titre;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_artist", nullable = false)
+    @JoinColumn(name = "nom_artist", nullable = false)
     private Artist artist;
 
     public Track() {
     }
 
-    public long getId_track() {
+    public String getId_track() {
         return id_track;
     }
 
-    public void setId_track(long id_track) {
+    public void setId_track(String id_track) {
         this.id_track = id_track;
     }
 
@@ -53,4 +53,6 @@ public class Track {
     public void setArtist(Artist artist) {
         this.artist = artist;
     }
+
+
 }

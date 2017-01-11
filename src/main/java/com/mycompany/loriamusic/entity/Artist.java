@@ -15,25 +15,13 @@ import javax.validation.constraints.NotNull;
 public class Artist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_artist")
-    private long id_artist;
-    
-    @Column(name = "nom", unique = true, nullable = false, length = 100)
+    @Column(name = "nom_artist", length = 100)
     private String nom;
 
     @OneToMany(mappedBy="artist")
     private Set<Track> tracks;
     
     public Artist() {
-    }
-
-    public long getId_artist() {
-        return id_artist;
-    }
-
-    public void setId_artist(long id_artist) {
-        this.id_artist = id_artist;
     }
 
     public String getNom() {

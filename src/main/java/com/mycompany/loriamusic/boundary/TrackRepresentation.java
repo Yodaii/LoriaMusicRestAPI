@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.boundary;
 
+import apicall.Youtube;
+import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Track;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,9 @@ public class TrackRepresentation {
     @Autowired
     TrackResource tr;
     
+    @Autowired
+    ArtistResource ar;
+    
     //GET
     @GetMapping
     public ResponseEntity<?> getAllTracks(){
@@ -38,8 +43,42 @@ public class TrackRepresentation {
     }
     
      //GET une instance
+    @GetMapping(value="/{nomArtist}/{titreTrack}")
+    public ResponseEntity<?> getSearchTrack(@PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack){
+        Artist artist = ar.findOne(nomArtist);
+        if(artist == null){
+            artist = new Artist();
+            artist.setNom(nomArtist);
+            ar.save(artist);
+        }
+        
+        Iterable<Track> tracks = tr.findAll();
+        Track track = null;
+        
+        for(Track t : tracks){
+            if(t.getTitre().equals(titreTrack) && t.getArtist().getNom().equals(nomArtist)){
+                track = t;
+                break;
+            }
+        }
+        if(track == null){
+            if(Youtube.search(nomArtist + " " + titreTrack) != null){
+                track = new Track();
+                track.setTitre(titreTrack);
+                track.setArtist(artist);
+                track.setId_track(Youtube.search(nomArtist + " " + titreTrack));
+                tr.save(track);
+            }
+        }
+        
+        return Optional.ofNullable(track)
+                .map(found -> new ResponseEntity(trackToResource(found,true),HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+     //GET une instance
     @GetMapping(value="/{trackid}")
-    public ResponseEntity<?> getOneTrack(@PathVariable("trackid") Long id){
+    public ResponseEntity<?> getOneTrack(@PathVariable("trackid") String id){
         return Optional.ofNullable(tr.findOne(id))
                 .map(found -> new ResponseEntity(trackToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -47,7 +86,7 @@ public class TrackRepresentation {
     
      //UPDATE PUT
     @PutMapping(value="/{trackid}")
-    public ResponseEntity<?> updateTrack(@RequestBody Track t, @PathVariable("trackid") Long id){
+    public ResponseEntity<?> updateTrack(@RequestBody Track t, @PathVariable("trackid") String id){
         t.setId_track(id);
         Track track = tr.save(t);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
