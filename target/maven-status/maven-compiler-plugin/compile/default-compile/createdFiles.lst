@@ -1,0 +1,10 @@
+com\mycompany\loriamusic\entity\Ecoute.class
+com\mycompany\loriamusic\entity\Track.class
+com\mycompany\loriamusic\entity\Artist.class
+com\mycompany\loriamusic\Application.class
+com\mycompany\loriamusic\entity\User.class
+com\mycompany\loriamusic\boundary\UserRepresentation.class
+com\mycompany\loriamusic\boundary\UserResource.class
+com\mycompany\loriamusic\entity\Recommandation.class
+com\mycompany\loriamusic\entity\Algorithme.class
+com\mycompany\loriamusic\entity\Session.class
