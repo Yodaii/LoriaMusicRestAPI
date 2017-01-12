@@ -22,8 +22,6 @@ public class User {
     @Column(name = "prenom", nullable = false, length = 100)
     private String prenom;
     
-    
-    
     @Column(name = "mot_de_passe", nullable = false, length = 100)
     private String mdp;
 

@@ -39,8 +39,8 @@ public class UserRepresentation {
     }
     
      //GET une instance
-    @GetMapping(value="/{userid}")
-    public ResponseEntity<?> getOneUser(@PathVariable("userid") String id){
+    @GetMapping(value="/{email}")
+    public ResponseEntity<?> getOneUser(@PathVariable("email") String id){
         return Optional.ofNullable(ur.findOne(id))
                 .map(found -> new ResponseEntity(userToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
