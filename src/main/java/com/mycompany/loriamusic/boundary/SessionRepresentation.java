@@ -2,6 +2,7 @@ package com.mycompany.loriamusic.boundary;
 
 import com.mycompany.loriamusic.entity.Session;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,17 @@ public class SessionRepresentation {
     }
     
      //UPDATE PUT
-    @PutMapping(value="/{sessionid}")
-    public ResponseEntity<?> updateSession(@RequestBody Session s, @PathVariable("sessionid") Long id){
-        s.setId_session(id);
-        Session session = sr.save(s);
+    @PutMapping(value="/{idUser}")
+    public ResponseEntity<?> updateSession(@PathVariable("idUser") String idUser){
+        List<Session> sessions = sr.findAll();
+        for(Session sess : sessions){
+            if(sess.getUser().getEmail().equals(idUser) && sess.getDateFinn()==null){
+                sess.setDateFin(new Date());
+                sr.save(sess);
+                break;
+            }
+        }
+        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     

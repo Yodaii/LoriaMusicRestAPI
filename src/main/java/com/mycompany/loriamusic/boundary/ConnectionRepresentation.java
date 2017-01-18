@@ -1,6 +1,8 @@
 package com.mycompany.loriamusic.boundary;
 
+import com.mycompany.loriamusic.entity.Session;
 import com.mycompany.loriamusic.entity.User;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -21,17 +23,27 @@ public class ConnectionRepresentation {
     @Autowired
     UserResource cr;
     
+    @Autowired
+    SessionResource sr;
+    
     //POST
-    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
-        User exist = cr.getOne(u.getEmail());
+        User exist = cr.findOne(u.getEmail());
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(linkTo(UserRepresentation.class)
+        
+        if(exist != null && u.getMdp().equals(exist.getMdp())){
+            Session nvSession = new Session();
+            nvSession.setDateDeb(new Date());
+            nvSession.setUser(exist);
+            sr.save(nvSession);
+            responseHeaders.setLocation(linkTo(UserRepresentation.class)
                 .slash(exist.getEmail())
                 .toUri());
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
-        
+            return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, responseHeaders, HttpStatus.NOT_FOUND);
+        }
         
     }
 }

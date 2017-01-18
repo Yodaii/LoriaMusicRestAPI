@@ -3,8 +3,11 @@ package com.mycompany.loriamusic.boundary;
 import apicall.Spotify;
 import apicall.Youtube;
 import com.mycompany.loriamusic.entity.Artist;
+import com.mycompany.loriamusic.entity.Ecoute;
 import com.mycompany.loriamusic.entity.Genre;
+import com.mycompany.loriamusic.entity.Session;
 import com.mycompany.loriamusic.entity.Track;
+import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +45,15 @@ public class TrackRepresentation {
 
     @Autowired
     GenreResource gr;
+    
+    @Autowired
+    UserResource ur;
+    
+    @Autowired
+    SessionResource sr;
+    
+    @Autowired
+    EcouteResource er;
 
     //GET
     @GetMapping
@@ -51,11 +63,14 @@ public class TrackRepresentation {
     }
 
     //GET une instance
-    @GetMapping(value = "/{nomArtist}/{titreTrack}")
-    public ResponseEntity<?> getSearchTrack(@PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
+    @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
+    public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
         Spotify spotify = new Spotify();
-
+        
+        User user = ur.findOne(idUser);
+        
         Artist artist = ar.findOne(nomArtist);
+        
         if (artist == null) {
             artist = new Artist();
             artist.setNom(nomArtist);
@@ -104,6 +119,19 @@ public class TrackRepresentation {
             }
         }
 
+        List<Session> sessionsUser = sr.findAll();
+        Session sessUser;
+        for(Session s : sessionsUser){
+            if(s.getDateFinn()==null && user.getEmail().equals(s.getUser().getEmail())){
+                sessUser = s;
+                Ecoute nvEcoute = new Ecoute();
+                nvEcoute.setSession(sessUser);
+                nvEcoute.setTrack(track);
+                er.save(nvEcoute);
+                break;
+            }
+        }
+        
         return Optional.ofNullable(track)
                 .map(found -> new ResponseEntity(trackToResource(found, true), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

@@ -24,7 +24,7 @@ public class Session {
     @Column(name = "date_debut", nullable = false)
     private Date dateDeb;
     
-    @Column(name = "date_fin", nullable = false)
+    @Column(name = "date_fin", nullable = true)
     private Date dateFin;
     
     @ManyToOne(fetch = FetchType.LAZY)

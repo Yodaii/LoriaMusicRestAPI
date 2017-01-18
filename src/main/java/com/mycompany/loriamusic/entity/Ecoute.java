@@ -20,10 +20,10 @@ public class Ecoute {
     @Column(name = "id_ecoute")
     private long id_ecoute;
     
-    @Column(name = "aimer")
+    @Column(name = "aimer", nullable = true)
     private boolean aimer;
    
-    @Column(name = "duree", nullable = false)
+    @Column(name = "duree", nullable = true)
     private float duree;
     
     @ManyToOne(fetch = FetchType.LAZY)
