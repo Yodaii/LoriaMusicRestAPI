@@ -1,6 +1,8 @@
 package com.mycompany.loriamusic.boundary;
 
+import com.mycompany.loriamusic.entity.Ecoute;
 import com.mycompany.loriamusic.entity.Recommandation;
+import com.mycompany.loriamusic.entity.Session;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,12 @@ public class RecommandationRepresentation {
     @Autowired
     RecommandationResource rr;
     
+    @Autowired
+    SessionResource sr;
+    
+    @Autowired
+    EcouteResource er;
+    
     //GET
     @GetMapping
     public ResponseEntity<?> getAllRecommandations(){
@@ -46,10 +54,37 @@ public class RecommandationRepresentation {
     }
     
      //UPDATE PUT
-    @PutMapping(value="/{recoid}")
-    public ResponseEntity<?> updateRecommandation(@RequestBody Recommandation r, @PathVariable("recoid") Long id){
-        r.setId_reco(id);
-        Recommandation recommandation = rr.save(r);
+    @PutMapping(value="/{idUser}/{idTrackEcoute}/{idTrackReco")
+    public ResponseEntity<?> updateRecommandation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco){
+        List<Session> sessionsUser = sr.findAll();
+        Session sessUser = new Session();
+        for(Session s : sessionsUser){
+            if(s.getDateFinn()==null && idUser.equals(s.getUser().getEmail())){
+                sessUser = s;
+                break;
+            }
+        }
+        
+        List<Ecoute> ecoutesSess = er.findAll();
+        Ecoute ecouteSess = new Ecoute();
+        for(Ecoute e : ecoutesSess){
+            if(e.getSession().getId_session() == sessUser.getId_session() && e.getTrack().getId_track() == idTrackEcoute){
+                ecouteSess = e;
+                break;
+            }
+        }
+        
+        List<Recommandation> recoEcoute = rr.findAll();
+        Recommandation reco = new Recommandation();
+        for(Recommandation r : recoEcoute){
+            if(r.getEcoute().getId_ecoute() == ecouteSess.getId_ecoute() && r.getTrack().getId_track() == idTrackReco){
+                reco = r;
+                reco.setEstChoisit(true);
+                rr.save(reco);
+                break;
+            }
+        }
+        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     

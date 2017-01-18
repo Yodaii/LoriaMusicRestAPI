@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -75,5 +77,19 @@ public class Ecoute {
 
     public void setTrack(Track track) {
         this.track = track;
+    }
+
+    public List<Recommandation> calculRecommandation(String idUser, List<Track> tracks) {
+        List<Recommandation> recos = new ArrayList<>();
+        int compteur = 0;
+        while(recos.size() < 9 && recos.size() != tracks.size()){
+            Recommandation r = new Recommandation();
+            r.setEcoute(this);
+            r.setTrack(tracks.get(compteur));
+            r.setEstChoisit(false);
+            recos.add(r);
+            compteur ++;
+        }
+        return recos;
     }
 }

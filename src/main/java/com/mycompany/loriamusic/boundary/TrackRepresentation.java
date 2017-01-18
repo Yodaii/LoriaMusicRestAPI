@@ -5,6 +5,7 @@ import apicall.Youtube;
 import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Ecoute;
 import com.mycompany.loriamusic.entity.Genre;
+import com.mycompany.loriamusic.entity.Recommandation;
 import com.mycompany.loriamusic.entity.Session;
 import com.mycompany.loriamusic.entity.Track;
 import com.mycompany.loriamusic.entity.User;
@@ -54,6 +55,9 @@ public class TrackRepresentation {
     
     @Autowired
     EcouteResource er;
+    
+    @Autowired
+    RecommandationResource rr;
 
     //GET
     @GetMapping
@@ -94,7 +98,7 @@ public class TrackRepresentation {
             ar.save(artist);
         }
 
-        Iterable<Track> tracks = tr.findAll();
+        List<Track> tracks = tr.findAll();
         Track track = null;
 
         for (Track t : tracks) {
@@ -128,6 +132,9 @@ public class TrackRepresentation {
                 nvEcoute.setSession(sessUser);
                 nvEcoute.setTrack(track);
                 er.save(nvEcoute);
+                
+                List<Recommandation> recos = nvEcoute.calculRecommandation(idUser, tracks);
+                rr.save(recos);
                 break;
             }
         }

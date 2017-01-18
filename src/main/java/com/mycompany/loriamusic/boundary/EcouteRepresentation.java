@@ -1,10 +1,13 @@
 package com.mycompany.loriamusic.boundary;
 
 import com.mycompany.loriamusic.entity.Ecoute;
+import com.mycompany.loriamusic.entity.Session;
+import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
@@ -30,6 +33,12 @@ public class EcouteRepresentation {
     @Autowired
     EcouteResource er;
     
+    @Autowired
+    UserResource ur;
+    
+    @Autowired
+    SessionResource sr;
+    
     //GET
     @GetMapping
     public ResponseEntity<?> getAllEcoutes(){
@@ -46,10 +55,32 @@ public class EcouteRepresentation {
     }
     
      //UPDATE PUT
-    @PutMapping(value="/{ecouteid}")
-    public ResponseEntity<?> updateEcoute(@RequestBody Ecoute e, @PathVariable("ecouteid") Long id){
-        e.setId_ecoute(id);
-        Ecoute ecoute = er.save(e);
+    @PutMapping(value="/{idUser}/{idTrack}/{aime}")
+    public ResponseEntity<?> updateEcoute(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack,@PathVariable("aime") String aime){
+        Session sessEcoute = new Session();
+        Ecoute ecoute = new Ecoute();
+        
+        List<Session> sessions = sr.findAll();
+        for(Session sess : sessions){
+            if(sess.getUser().getEmail().equals(idUser) && sess.getDateFinn()==null){
+                sessEcoute = sess;
+                break;
+            }
+        }
+        
+        List<Ecoute> ecoutes = er.findAll();
+        for(Ecoute ec : ecoutes){
+            if(sessEcoute.getId_session() == ec.getSession().getId_session() && ec.getTrack().getId_track() == idTrack){
+                ecoute = ec;
+                if(aime.equals("true")){
+                    ecoute.setAimer(true);
+                }else{
+                    ecoute.setAimer(false);
+                }
+                er.save(ecoute);
+            }
+        }
+        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
