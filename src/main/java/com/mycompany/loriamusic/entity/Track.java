@@ -1,20 +1,20 @@
 package com.mycompany.loriamusic.entity;
 
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Track")
-public class Track {
+public class Track implements Serializable {
 
     @Id
     @Column(name = "id_track")
@@ -25,46 +25,55 @@ public class Track {
 
     @Column(name = "acousticness", nullable = true)
     private Double acousticness;
-    
+
     @Column(name = "danceability", nullable = true)
     private Double danceability;
-    
+
     @Column(name = "duration_ms", nullable = true)
     private Integer duration_ms;
-     
+
     @Column(name = "energy", nullable = true)
     private Double energy;
-      
+
     @Column(name = "instrumentalness", nullable = true)
     private Double instrumentalness;
-       
+
     @Column(name = "key_track", nullable = true)
     private Integer key;
-        
+
     @Column(name = "liveness", nullable = true)
     private Double liveness;
-         
+
     @Column(name = "loudness", nullable = true)
     private Double loudness;
-          
+
     @Column(name = "mode", nullable = true)
     private Integer mode;
-           
+
     @Column(name = "speechiness", nullable = true)
     private Double speechiness;
-            
+
     @Column(name = "tempo", nullable = true)
     private Double tempo;
-             
+
     @Column(name = "time_signature", nullable = true)
     private Integer time_signature;
-              
+
     @Column(name = "valence", nullable = true)
     private Double valence;
-     
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nom_artist", nullable = false)
+    @JsonIgnore
     private Artist artist;
+
+    @OneToMany(mappedBy="track")
+    @JsonIgnore
+    private Set<Listening> listenings;
+    
+    @OneToMany(mappedBy="track")
+    @JsonIgnore
+    private Set<Recommendation> recommendations;
 
     public Track() {
     }
@@ -197,5 +206,19 @@ public class Track {
         this.valence = valence;
     }
 
+    public Set<Listening> getListenings() {
+        return listenings;
+    }
 
+    public void setListenings(Set<Listening> listenings) {
+        this.listenings = listenings;
+    }
+
+    public Set<Recommendation> getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(Set<Recommendation> recommendations) {
+        this.recommendations = recommendations;
+    }
 }

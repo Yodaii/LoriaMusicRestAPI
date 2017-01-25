@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,12 +12,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Genre")
-public class Genre {
+public class Genre implements Serializable {
     @Id
     @Column(name = "nom_genre", length = 100)
     private String nom;
     
     @ManyToMany(cascade=CascadeType.ALL, mappedBy="genres")
+    @JsonIgnore
     private Set<Artist> artists;  
     
     public Genre(){}

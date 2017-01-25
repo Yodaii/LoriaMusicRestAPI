@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Artist")
-public class Artist {
+public class Artist implements Serializable {
 
     @Id
     @Column(name = "nom_artist", length = 100)
@@ -27,6 +29,7 @@ public class Artist {
     
     @ManyToMany(cascade=CascadeType.ALL)  
     @JoinTable(name="genres_artist", joinColumns=@JoinColumn(name="nom_artist"), inverseJoinColumns=@JoinColumn(name="nom_genre")) 
+    @JsonIgnore
     private Set<Genre> genres;
     
     public Artist() {

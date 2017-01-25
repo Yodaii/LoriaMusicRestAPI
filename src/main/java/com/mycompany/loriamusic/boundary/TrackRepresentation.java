@@ -2,11 +2,18 @@ package com.mycompany.loriamusic.boundary;
 
 import apicall.Spotify;
 import apicall.Youtube;
+import com.mycompany.loriamusic.DAO.ArtistDAO;
+import com.mycompany.loriamusic.DAO.GenreDAO;
+import com.mycompany.loriamusic.DAO.ListeningDAO;
+import com.mycompany.loriamusic.DAO.RecommendationDAO;
+import com.mycompany.loriamusic.DAO.SessionUserDAO;
+import com.mycompany.loriamusic.DAO.TrackDAO;
+import com.mycompany.loriamusic.DAO.UserDAO;
 import com.mycompany.loriamusic.entity.Artist;
-import com.mycompany.loriamusic.entity.Ecoute;
+import com.mycompany.loriamusic.entity.Listening;
 import com.mycompany.loriamusic.entity.Genre;
-import com.mycompany.loriamusic.entity.Recommandation;
-import com.mycompany.loriamusic.entity.Session;
+import com.mycompany.loriamusic.entity.Recommendation;
+import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;
 import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
@@ -19,7 +26,6 @@ import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,6 +38,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/track", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,30 +46,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrackRepresentation {
 
     @Autowired
-    TrackResource tr;
+    TrackDAO trackDao;
 
     @Autowired
-    ArtistResource ar;
+    ArtistDAO artistDao;
 
     @Autowired
-    GenreResource gr;
-    
+    GenreDAO genreDao;
+
     @Autowired
-    UserResource ur;
-    
+    UserDAO userDao;
+
     @Autowired
-    SessionResource sr;
-    
+    SessionUserDAO sessionUserDao;
+
     @Autowired
-    EcouteResource er;
-    
+    ListeningDAO listeningDao;
+
     @Autowired
-    RecommandationResource rr;
+    RecommendationDAO recommendatioDao;
 
     //GET
     @GetMapping
     public ResponseEntity<?> getAllTracks() {
-        Iterable<Track> allTracks = tr.findAll();
+        Iterable<Track> allTracks = trackDao.getAll();
         return new ResponseEntity<>(trackToResource(allTracks), HttpStatus.OK);
     }
 
@@ -70,11 +77,11 @@ public class TrackRepresentation {
     @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
     public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
         Spotify spotify = new Spotify();
-        
-        User user = ur.findOne(idUser);
-        
-        Artist artist = ar.findOne(nomArtist);
-        
+
+        User user = userDao.getById(idUser);
+
+        Artist artist = artistDao.getById(nomArtist);
+
         if (artist == null) {
             artist = new Artist();
             artist.setNom(nomArtist);
@@ -85,28 +92,21 @@ public class TrackRepresentation {
             ArrayList<Genre> genres = (ArrayList<Genre>) data.get(0);
             if (genres != null) {
                 for (Genre g : genres) {
-                    Genre exist = gr.findOne(g.getNom());
+                    Genre exist = genreDao.getById(g.getNom());
 
                     if (exist == null) {
-                        gr.save(g);
+                        genreDao.create(g);
                     }
 
                     genresArtist.add(g);
                 }
             }
             artist.setGenres(genresArtist);
-            ar.save(artist);
+            artistDao.create(artist);
         }
 
-        List<Track> tracks = tr.findAll();
-        Track track = null;
+        Track track = trackDao.searchTrack(titreTrack, nomArtist);
 
-        for (Track t : tracks) {
-            if (t.getTitre().equals(titreTrack) && t.getArtist().getNom().equals(nomArtist)) {
-                track = t;
-                break;
-            }
-        }
         if (track == null) {
             if (Youtube.search(nomArtist + " " + titreTrack) != null) {
                 track = new Track();
@@ -119,26 +119,22 @@ public class TrackRepresentation {
                 // info spotify
                 track = spotify.getTrackMetadata(track, nomArtist, titreTrack);
 
-                tr.save(track);
+                trackDao.create(track);
             }
+        } else if (track.getId_track() != Youtube.search(track.getId_track())) {
+            track.setId_track(Youtube.search(nomArtist + " " + titreTrack));
+            trackDao.update(track);
         }
 
-        List<Session> sessionsUser = sr.findAll();
-        Session sessUser;
-        for(Session s : sessionsUser){
-            if(s.getDateFinn()==null && user.getEmail().equals(s.getUser().getEmail())){
-                sessUser = s;
-                Ecoute nvEcoute = new Ecoute();
-                nvEcoute.setSession(sessUser);
-                nvEcoute.setTrack(track);
-                er.save(nvEcoute);
-                
-                List<Recommandation> recos = nvEcoute.calculRecommandation(idUser, tracks);
-                rr.save(recos);
-                break;
-            }
-        }
-        
+        SessionUser sessUser = sessionUserDao.getCurrentSession(user);
+        Listening nvEcoute = new Listening();
+        nvEcoute.setSession(sessUser);
+        nvEcoute.setTrack(track);
+        listeningDao.create(nvEcoute);
+
+        List<Recommendation> recos = nvEcoute.calculRecommandation(idUser, trackDao.getAll());
+        recommendatioDao.createAll(recos);
+
         return Optional.ofNullable(track)
                 .map(found -> new ResponseEntity(trackToResource(found, true), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -147,7 +143,7 @@ public class TrackRepresentation {
     //GET une instance
     @GetMapping(value = "/{trackid}")
     public ResponseEntity<?> getOneTrack(@PathVariable("trackid") String id) {
-        return Optional.ofNullable(tr.findOne(id))
+        return Optional.ofNullable(trackDao.getById(id))
                 .map(found -> new ResponseEntity(trackToResource(found, true), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -156,14 +152,14 @@ public class TrackRepresentation {
     @PutMapping(value = "/{trackid}")
     public ResponseEntity<?> updateTrack(@RequestBody Track t, @PathVariable("trackid") String id) {
         t.setId_track(id);
-        Track track = tr.save(t);
+        Track track = trackDao.update(t);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //POST
     @PostMapping
     public ResponseEntity<?> saveTrack(@RequestBody Track t) {
-        Track saved = tr.save(t);
+        Track saved = trackDao.create(t);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(TrackRepresentation.class)
                 .slash(saved.getId_track())

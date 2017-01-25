@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -11,11 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Ecoute")
-public class Ecoute {
+@Table(name = "Listening")
+public class Listening implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,13 +31,15 @@ public class Ecoute {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_session", nullable = false)
-    private Session session;
+    @JsonIgnore
+    private SessionUser session;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_track", nullable = false)
+    @JsonIgnore
     private Track track;
 
-    public Ecoute() {
+    public Listening() {
     }
 
     public long getId_ecoute() {
@@ -63,11 +66,11 @@ public class Ecoute {
         this.duree = duree;
     }
 
-    public Session getSession() {
+    public SessionUser getSession() {
         return session;
     }
 
-    public void setSession(Session session) {
+    public void setSession(SessionUser session) {
         this.session = session;
     }
 
@@ -79,11 +82,11 @@ public class Ecoute {
         this.track = track;
     }
 
-    public List<Recommandation> calculRecommandation(String idUser, List<Track> tracks) {
-        List<Recommandation> recos = new ArrayList<>();
+    public List<Recommendation> calculRecommandation(String idUser, List<Track> tracks) {
+        List<Recommendation> recos = new ArrayList<>();
         int compteur = 0;
         while(recos.size() < 9 && recos.size() != tracks.size()){
-            Recommandation r = new Recommandation();
+            Recommendation r = new Recommendation();
             r.setEcoute(this);
             r.setTrack(tracks.get(compteur));
             r.setEstChoisit(false);

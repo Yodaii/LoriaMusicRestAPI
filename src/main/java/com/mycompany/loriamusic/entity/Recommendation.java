@@ -1,5 +1,7 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,11 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Recommandation")
-public class Recommandation {
+@Table(name = "Recommendation")
+public class Recommendation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,13 +26,15 @@ public class Recommandation {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_track", nullable = false)
+    @JsonIgnore
     private Track track;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ecoute", nullable = false)
-    private Ecoute ecoute;
+    @JsonIgnore
+    private Listening ecoute;
 
-    public Recommandation() {
+    public Recommendation() {
     }
 
     public long getId_reco() {
@@ -58,11 +61,11 @@ public class Recommandation {
         this.track = track;
     }
 
-    public Ecoute getEcoute() {
+    public Listening getEcoute() {
         return ecoute;
     }
 
-    public void setEcoute(Ecoute ecoute) {
+    public void setEcoute(Listening ecoute) {
         this.ecoute = ecoute;
     }
 }

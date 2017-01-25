@@ -1,16 +1,17 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "User")
-public class User {
+public class User implements Serializable {
 
     @Id
     @Column(name = "email", length = 100)
@@ -25,6 +26,10 @@ public class User {
     @Column(name = "mot_de_passe", nullable = false, length = 100)
     private String mdp;
 
+    @OneToMany(mappedBy="user")
+    @JsonIgnore
+    private Set<SessionUser> sessions;
+    
     public User() {
     }
 
@@ -59,5 +64,13 @@ public class User {
 
     public void setMdp(String mdp) {
         this.mdp = mdp;
+    }
+
+    public Set<SessionUser> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(Set<SessionUser> sessions) {
+        this.sessions = sessions;
     }
 }

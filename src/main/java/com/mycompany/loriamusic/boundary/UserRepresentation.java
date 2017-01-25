@@ -1,5 +1,6 @@
 package com.mycompany.loriamusic.boundary;
 
+import com.mycompany.loriamusic.DAO.UserDAO;
 import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,19 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 @ExposesResourceFor(User.class)
 public class UserRepresentation {
     @Autowired
-    UserResource ur;
+    UserDAO userDao;
     
     //GET
     @GetMapping
     public ResponseEntity<?> getAllUsers(){
-        Iterable<User> allUsers = ur.findAll();
+        Iterable<User> allUsers = userDao.getAll();
         return new ResponseEntity<>(userToResource(allUsers), HttpStatus.OK);
     }
     
      //GET une instance
     @GetMapping(value="/{email}")
     public ResponseEntity<?> getOneUser(@PathVariable("email") String id){
-        return Optional.ofNullable(ur.findOne(id))
+        return Optional.ofNullable(userDao.getById(id))
                 .map(found -> new ResponseEntity(userToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -50,15 +50,14 @@ public class UserRepresentation {
     @PutMapping(value="/{email}")
     public ResponseEntity<?> updateUser(@RequestBody User u, @PathVariable("email") String id){
         u.setEmail(id);
-        User user = ur.save(u);
+        User user = userDao.update(u);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     //POST
-    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User u){
-        User saved = ur.save(u);
+        User saved = userDao.create(u);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)
                 .slash(saved.getEmail())

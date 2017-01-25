@@ -1,6 +1,9 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,12 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Session")
-public class Session {
+@Table(name = "Sessionuser")
+public class SessionUser implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +34,11 @@ public class Session {
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
-    public Session() {
+    @OneToMany(mappedBy="session")
+    @JsonIgnore
+    private Set<Listening> listenings;
+    
+    public SessionUser() {
     }
 
     public long getId_session() {
@@ -64,5 +71,13 @@ public class Session {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Listening> getListenings() {
+        return listenings;
+    }
+
+    public void setListenings(Set<Listening> listenings) {
+        this.listenings = listenings;
     }
 }

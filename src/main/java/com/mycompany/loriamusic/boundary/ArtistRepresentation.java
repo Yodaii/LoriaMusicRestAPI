@@ -1,5 +1,6 @@
 package com.mycompany.loriamusic.boundary;
 
+import com.mycompany.loriamusic.DAO.ArtistDAO;
 import com.mycompany.loriamusic.entity.Artist;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 @ExposesResourceFor(Artist.class)
 public class ArtistRepresentation { 
     @Autowired
-    ArtistResource ar;
+    ArtistDAO artistDao;
     
     //GET
     @GetMapping
     public ResponseEntity<?> getAllArtists(){
-        Iterable<Artist> allArtists = ar.findAll();
+        Iterable<Artist> allArtists = artistDao.getAll();
         return new ResponseEntity<>(artistToResource(allArtists), HttpStatus.OK);
     }
     
      //GET une instance
     @GetMapping(value="/{artistnom}")
     public ResponseEntity<?> getOneArtist(@PathVariable("artistnom") String nom){
-        return Optional.ofNullable(ar.findOne(nom))
+        return Optional.ofNullable(artistDao.getById(nom))
                 .map(found -> new ResponseEntity(artistToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -49,14 +50,14 @@ public class ArtistRepresentation {
     @PutMapping(value="/{artistnom}")
     public ResponseEntity<?> updateArtist(@RequestBody Artist a, @PathVariable("artistnom") String nom){
         a.setNom(nom);
-        Artist artist = ar.save(a);
+        Artist artist = artistDao.update(a);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     //POST
     @PostMapping
     public ResponseEntity<?> saveArtist(@RequestBody Artist a){
-        Artist saved = ar.save(a);
+        Artist saved = artistDao.create(a);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(ArtistRepresentation.class)
                 .slash(saved.getNom())

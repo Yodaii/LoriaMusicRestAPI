@@ -1,8 +1,15 @@
 package com.mycompany.loriamusic.boundary;
 
-import com.mycompany.loriamusic.entity.Ecoute;
-import com.mycompany.loriamusic.entity.Recommandation;
-import com.mycompany.loriamusic.entity.Session;
+import com.mycompany.loriamusic.DAO.ListeningDAO;
+import com.mycompany.loriamusic.DAO.RecommendationDAO;
+import com.mycompany.loriamusic.DAO.SessionUserDAO;
+import com.mycompany.loriamusic.DAO.TrackDAO;
+import com.mycompany.loriamusic.DAO.UserDAO;
+import com.mycompany.loriamusic.entity.Listening;
+import com.mycompany.loriamusic.entity.Recommendation;
+import com.mycompany.loriamusic.entity.SessionUser;
+import com.mycompany.loriamusic.entity.Track;
+import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +18,6 @@ import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,31 +30,38 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value="/reco", produces=MediaType.APPLICATION_JSON_VALUE)
-@ExposesResourceFor(Recommandation.class)
-public class RecommandationRepresentation { 
+@ExposesResourceFor(Recommendation.class)
+public class RecommendationRepresentation { 
     @Autowired
-    RecommandationResource rr;
+    RecommendationDAO recommendationDao;
     
     @Autowired
-    SessionResource sr;
+    SessionUserDAO sessionUserDao;
     
     @Autowired
-    EcouteResource er;
+    TrackDAO trackDao;
+    
+    @Autowired
+    ListeningDAO linsteningDao;
+    
+    @Autowired
+    UserDAO userDao;
     
     //GET
     @GetMapping
     public ResponseEntity<?> getAllRecommandations(){
-        Iterable<Recommandation> allRecommandations = rr.findAll();
+        Iterable<Recommendation> allRecommandations = recommendationDao.getAll();
         return new ResponseEntity<>(recommandationToResource(allRecommandations), HttpStatus.OK);
     }
     
      //GET une instance
     @GetMapping(value="/{recoid}")
     public ResponseEntity<?> getOneRecommandation(@PathVariable("recoid") Long id){
-        return Optional.ofNullable(rr.findOne(id))
+        return Optional.ofNullable(recommendationDao.getById(id))
                 .map(found -> new ResponseEntity(recommandationToResource(found,true),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -56,63 +69,43 @@ public class RecommandationRepresentation {
      //UPDATE PUT
     @PutMapping(value="/{idUser}/{idTrackEcoute}/{idTrackReco")
     public ResponseEntity<?> updateRecommandation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco){
-        List<Session> sessionsUser = sr.findAll();
-        Session sessUser = new Session();
-        for(Session s : sessionsUser){
-            if(s.getDateFinn()==null && idUser.equals(s.getUser().getEmail())){
-                sessUser = s;
-                break;
-            }
-        }
+        User user = userDao.getById(idUser);
+        SessionUser sessUser = sessionUserDao.getCurrentSession(user);
         
-        List<Ecoute> ecoutesSess = er.findAll();
-        Ecoute ecouteSess = new Ecoute();
-        for(Ecoute e : ecoutesSess){
-            if(e.getSession().getId_session() == sessUser.getId_session() && e.getTrack().getId_track() == idTrackEcoute){
-                ecouteSess = e;
-                break;
-            }
-        }
-        
-        List<Recommandation> recoEcoute = rr.findAll();
-        Recommandation reco = new Recommandation();
-        for(Recommandation r : recoEcoute){
-            if(r.getEcoute().getId_ecoute() == ecouteSess.getId_ecoute() && r.getTrack().getId_track() == idTrackReco){
-                reco = r;
-                reco.setEstChoisit(true);
-                rr.save(reco);
-                break;
-            }
-        }
+        Track trackListening = trackDao.getById(idTrackEcoute);
+        Listening ecouteSess = linsteningDao.getListeningTrackSession(sessUser, trackListening);
+       
+        Track trackRecommendation = trackDao.getById(idTrackReco);
+        recommendationDao.setChooseRecommendation(ecouteSess, trackRecommendation);
         
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     //POST
     @PostMapping
-    public ResponseEntity<?> saveRecommandation(@RequestBody Recommandation r){
-        Recommandation saved = rr.save(r);
+    public ResponseEntity<?> saveRecommandation(@RequestBody Recommendation r){
+        Recommendation saved = recommendationDao.create(r);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(linkTo(RecommandationRepresentation.class)
+        responseHeaders.setLocation(linkTo(RecommendationRepresentation.class)
                 .slash(saved.getId_reco())
                 .toUri());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
     
-    private Resources<Resource<Recommandation>> recommandationToResource(Iterable<Recommandation> all){
-        Link selfLink = linkTo(methodOn(RecommandationRepresentation.class).getAllRecommandations())
+    private Resources<Resource<Recommendation>> recommandationToResource(Iterable<Recommendation> all){
+        Link selfLink = linkTo(methodOn(RecommendationRepresentation.class).getAllRecommandations())
                 .withSelfRel();
-        List<Resource<Recommandation>> recommandations = new ArrayList();
+        List<Resource<Recommendation>> recommandations = new ArrayList();
         all.forEach(recommandation -> recommandations.add(recommandationToResource(recommandation, false)));
         return new Resources<>(recommandations,selfLink);
     }
     
-    private Resource<Recommandation> recommandationToResource(Recommandation r, Boolean collection){
-        Link selfLink = linkTo(RecommandationRepresentation.class)
+    private Resource<Recommendation> recommandationToResource(Recommendation r, Boolean collection){
+        Link selfLink = linkTo(RecommendationRepresentation.class)
                 .slash(r.getId_reco())
                 .withSelfRel();
         if(collection){
-            Link collectionLink = linkTo(methodOn(RecommandationRepresentation.class).getAllRecommandations())
+            Link collectionLink = linkTo(methodOn(RecommendationRepresentation.class).getAllRecommandations())
                     .withRel("collection");
             return new Resource<>(r, selfLink, collectionLink);
         } else {

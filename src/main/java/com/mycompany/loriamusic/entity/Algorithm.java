@@ -1,16 +1,16 @@
 package com.mycompany.loriamusic.entity;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Algorithme")
-public class Algorithme {
+public class Algorithm implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +20,7 @@ public class Algorithme {
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;
 
-    public Algorithme() {
+    public Algorithm() {
     }
 
     public long getId_algo() {
