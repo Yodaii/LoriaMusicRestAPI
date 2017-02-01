@@ -42,7 +42,7 @@ public class AlgorithmDAO {
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.createQuery("from Algorithme").list();
+        return currentSession.createQuery("from Algorithm").list();
     }
 
     /**

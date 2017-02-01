@@ -71,8 +71,8 @@ public class ListeningDAO {
 
         String hql = "SELECT li FROM Listening li WHERE li.track=:track AND li.session=:session";
         Query query = currentSession.createQuery(hql);
-        query.setParameter("track", session);
-        query.setParameter("session", track);
+        query.setParameter("track", track);
+        query.setParameter("session", session);
 
         return (Listening) query.list().get(0);
     }

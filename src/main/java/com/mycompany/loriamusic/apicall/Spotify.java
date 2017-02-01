@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package apicall;
+package com.mycompany.loriamusic.apicall;
 
 import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Genre;

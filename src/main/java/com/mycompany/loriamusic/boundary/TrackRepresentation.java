@@ -1,7 +1,7 @@
 package com.mycompany.loriamusic.boundary;
 
-import apicall.Spotify;
-import apicall.Youtube;
+import com.mycompany.loriamusic.apicall.Spotify;
+import com.mycompany.loriamusic.apicall.Youtube;
 import com.mycompany.loriamusic.DAO.ArtistDAO;
 import com.mycompany.loriamusic.DAO.GenreDAO;
 import com.mycompany.loriamusic.DAO.ListeningDAO;
@@ -132,9 +132,6 @@ public class TrackRepresentation {
         nvEcoute.setTrack(track);
         listeningDao.create(nvEcoute);
 
-        List<Recommendation> recos = nvEcoute.calculRecommandation(idUser, trackDao.getAll());
-        recommendatioDao.createAll(recos);
-
         return Optional.ofNullable(track)
                 .map(found -> new ResponseEntity(trackToResource(found, true), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -168,7 +165,7 @@ public class TrackRepresentation {
     }
 
     private Resources<Resource<Track>> trackToResource(Iterable<Track> all) {
-        Link selfLink = linkTo(methodOn(ArtistRepresentation.class).getAllArtists())
+        Link selfLink = linkTo(methodOn(TrackRepresentation.class).getAllTracks())
                 .withSelfRel();
         List<Resource<Track>> tracks = new ArrayList();
         all.forEach(track -> tracks.add(trackToResource(track, false)));

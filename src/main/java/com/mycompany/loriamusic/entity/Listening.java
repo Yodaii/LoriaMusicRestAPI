@@ -81,18 +81,4 @@ public class Listening implements Serializable {
     public void setTrack(Track track) {
         this.track = track;
     }
-
-    public List<Recommendation> calculRecommandation(String idUser, List<Track> tracks) {
-        List<Recommendation> recos = new ArrayList<>();
-        int compteur = 0;
-        while(recos.size() < 9 && recos.size() != tracks.size()){
-            Recommendation r = new Recommendation();
-            r.setEcoute(this);
-            r.setTrack(tracks.get(compteur));
-            r.setEstChoisit(false);
-            recos.add(r);
-            compteur ++;
-        }
-        return recos;
-    }
 }

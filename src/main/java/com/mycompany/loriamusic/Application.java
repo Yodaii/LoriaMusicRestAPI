@@ -5,6 +5,7 @@
  */
 package com.mycompany.loriamusic;
 
+import com.mycompany.loriamusic.algorithm.AlgorithmFactory;
 import com.mycompany.loriamusic.entity.Track;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -85,7 +86,12 @@ public class Application extends RepositoryRestConfigurerAdapter {
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
-
+    
+    @Bean
+    public AlgorithmFactory algorithmFactory(){
+        return new AlgorithmFactory();
+    }
+    
     Properties hibernateProperties() {
         return new Properties() {
             {
