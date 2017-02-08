@@ -2,6 +2,7 @@ package com.mycompany.loriamusic.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,8 +23,11 @@ public class Recommendation implements Serializable {
     @Column(name = "id_reco")
     private long id_reco;
     
-    @Column(name = "est_choisit", nullable = false)
-    private boolean estChoisit;
+    @Column(name = "is_choose", nullable = false)
+    private boolean isChoose;
+    
+     @Column(name = "name_algorithm", nullable = false)
+    private String nameAlgorithm;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_track", nullable = false)
@@ -32,7 +37,7 @@ public class Recommendation implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ecoute", nullable = false)
     @JsonIgnore
-    private Listening ecoute;
+    private Listening listening;
 
     public Recommendation() {
     }
@@ -45,12 +50,12 @@ public class Recommendation implements Serializable {
         this.id_reco = id_reco;
     }
 
-    public boolean isEstChoisit() {
-        return estChoisit;
+    public boolean isIsChoose() {
+        return isChoose;
     }
 
-    public void setEstChoisit(boolean estChoisit) {
-        this.estChoisit = estChoisit;
+    public void setIsChoose(boolean estChoisit) {
+        this.isChoose = estChoisit;
     }
 
     public Track getTrack() {
@@ -61,11 +66,19 @@ public class Recommendation implements Serializable {
         this.track = track;
     }
 
-    public Listening getEcoute() {
-        return ecoute;
+    public Listening getListening() {
+        return listening;
     }
 
-    public void setEcoute(Listening ecoute) {
-        this.ecoute = ecoute;
+    public void setListening(Listening listening) {
+        this.listening = listening;
+    }
+
+    public String getNameAlgorithm() {
+        return nameAlgorithm;
+    }
+
+    public void setNameAlgorithm(String nameAlgorithm) {
+        this.nameAlgorithm = nameAlgorithm;
     }
 }

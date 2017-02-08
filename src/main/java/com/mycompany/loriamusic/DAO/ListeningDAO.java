@@ -1,6 +1,5 @@
 package com.mycompany.loriamusic.DAO;
 
-import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Listening;
 import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;

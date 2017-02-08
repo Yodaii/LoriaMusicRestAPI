@@ -5,6 +5,7 @@ import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
@@ -57,6 +58,8 @@ public class UserRepresentation {
     //POST
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User u){
+        String mdpHash = DigestUtils.sha1Hex(u.getMdp());
+        u.setMdp(mdpHash);
         User saved = userDao.create(u);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)

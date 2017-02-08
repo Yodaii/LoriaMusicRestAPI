@@ -6,6 +6,7 @@
 package com.mycompany.loriamusic;
 
 import com.mycompany.loriamusic.algorithm.AlgorithmFactory;
+import com.mycompany.loriamusic.apicall.ImportData;
 import com.mycompany.loriamusic.entity.Track;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -14,6 +15,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +37,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class Application extends RepositoryRestConfigurerAdapter {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
     }
 
     @Override
@@ -90,6 +92,12 @@ public class Application extends RepositoryRestConfigurerAdapter {
     @Bean
     public AlgorithmFactory algorithmFactory(){
         return new AlgorithmFactory();
+    }
+    
+    @Bean
+    @Autowired
+    public ImportData importData(){
+        return new ImportData();
     }
     
     Properties hibernateProperties() {

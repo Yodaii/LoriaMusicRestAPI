@@ -1,6 +1,5 @@
 package com.mycompany.loriamusic.DAO;
 
-import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.User;
 import java.util.List;
 import org.hibernate.Session;

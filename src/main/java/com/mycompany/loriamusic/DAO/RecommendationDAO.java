@@ -1,9 +1,8 @@
 package com.mycompany.loriamusic.DAO;
 
-import com.mycompany.loriamusic.entity.Artist;
+import com.mycompany.loriamusic.entity.Algorithm;
 import com.mycompany.loriamusic.entity.Listening;
 import com.mycompany.loriamusic.entity.Recommendation;
-import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;
 import java.util.List;
 import org.hibernate.Query;
@@ -76,16 +75,16 @@ public class RecommendationDAO {
         return recommendation;
     }
 
-    public void setChooseRecommendation(Listening listening, Track track) {
-        Recommendation reco = this.getRecommendationTrackListening(listening, track);
-        reco.setEstChoisit(true);
+    public void setChooseRecommendation(Listening listening, Track track, String nomAlgo) {
+        Recommendation reco = this.getRecommendationTrackListening(listening, track, nomAlgo);
+        reco.setIsChoose(true);
         this.update(reco);
     }
 
-    public Recommendation getRecommendationTrackListening(Listening listening, Track track) {
+    public Recommendation getRecommendationTrackListening(Listening listening, Track track, String nomAlgo) {
         Session currentSession = sessionFactory.getCurrentSession();
-
-        String hql = "SELECT re FROM Recommendation re WHERE re.track=:track AND re.listening=:listening";
+        
+        String hql = "SELECT re FROM Recommendation re WHERE re.track=:track AND re.listening=:listening AND re.nameAlgorithm='"+nomAlgo+"'";
         Query query = currentSession.createQuery(hql);
         query.setParameter("track", track);
         query.setParameter("listening", listening);

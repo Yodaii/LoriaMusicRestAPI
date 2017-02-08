@@ -37,4 +37,6 @@ public abstract class AbstractAlgorithm {
     RecommendationDAO recommendatioDao;
     
     public abstract List<Track> computeRecommendation(User user, Track track);
+    
+    public abstract String getNameAlgo();
 }

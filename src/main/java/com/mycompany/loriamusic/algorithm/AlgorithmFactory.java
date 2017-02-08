@@ -9,11 +9,10 @@ public class AlgorithmFactory {
     @Autowired
     private Random random;
     
-    public List<Track> createAlgorithm(String nom, User user, Track track){
+    public AbstractAlgorithm createAlgorithm(String nom){
        
         if(nom.equals("random")){
-            System.err.println("uezzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-            return random.computeRecommendation(user, track);
+            return random;
         }
         
         return null;

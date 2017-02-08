@@ -40,7 +40,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping(value = "/reco", produces = MediaType.APPLICATION_JSON_VALUE)
 @ExposesResourceFor(Recommendation.class)
 public class RecommendationRepresentation {
-
     @Autowired
     RecommendationDAO recommendationDao;
 
@@ -90,19 +89,17 @@ public class RecommendationRepresentation {
 
         if (!algorithms.isEmpty()) {
             for (Algorithm algo : algorithms) {
-                System.err.println(user);
-                System.err.println(track);
                 if (user != null && track != null) {
-                    System.err.println(track.getTitre() + "|||||" + user.getEmail());
-                    List<Track> tracks = algoFactory.createAlgorithm(algo.getNom(), user, track);
-                    System.err.println(tracks);
+                    AbstractAlgorithm abstractAlgo = algoFactory.createAlgorithm(algo.getNom());
+                    List<Track> tracks = abstractAlgo.computeRecommendation(user, track);
                     if (!tracks.isEmpty()) {
                         trackToReturn.addAll(tracks);
                         for (Track t : tracks) {
                             Recommendation reco = new Recommendation();
-                            reco.setEcoute(listening);
+                            reco.setListening(listening);
                             reco.setTrack(t);
-                            reco.setEstChoisit(false);
+                            reco.setIsChoose(false);
+                            reco.setNameAlgorithm(abstractAlgo.getNameAlgo());
                             recommendationDao.create(reco);
                         }
                     }
@@ -116,8 +113,8 @@ public class RecommendationRepresentation {
     }
 
     //UPDATE PUT
-    @PutMapping(value = "/{idUser}/{idTrackEcoute}/{idTrackReco")
-    public ResponseEntity<?> updateRecommendation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco) {
+    @GetMapping(value = "/{idUser}/{idTrackEcoute}/{idTrackReco}/{nomAlgo}")
+    public ResponseEntity<?> updateRecommendation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco, @PathVariable("nomAlgo") String nomAlgo) {
         User user = userDao.getById(idUser);
         SessionUser sessUser = sessionUserDao.getCurrentSession(user);
 
@@ -125,7 +122,8 @@ public class RecommendationRepresentation {
         Listening ecouteSess = listeningDao.getListeningTrackSession(sessUser, trackListening);
 
         Track trackRecommendation = trackDao.getById(idTrackReco);
-        recommendationDao.setChooseRecommendation(ecouteSess, trackRecommendation);
+        
+        recommendationDao.setChooseRecommendation(ecouteSess, trackRecommendation, nomAlgo);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

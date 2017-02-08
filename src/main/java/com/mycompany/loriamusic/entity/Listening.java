@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -38,7 +40,11 @@ public class Listening implements Serializable {
     @JoinColumn(name = "id_track", nullable = false)
     @JsonIgnore
     private Track track;
-
+    
+    @OneToMany(mappedBy="listening")
+    @JsonIgnore
+    private Set<Recommendation> recommendations;
+    
     public Listening() {
     }
 
@@ -80,5 +86,13 @@ public class Listening implements Serializable {
 
     public void setTrack(Track track) {
         this.track = track;
+    }
+
+    public Set<Recommendation> getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(Set<Recommendation> recommendations) {
+        this.recommendations = recommendations;
     }
 }

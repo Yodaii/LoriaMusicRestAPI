@@ -5,6 +5,7 @@ import com.mycompany.loriamusic.DAO.UserDAO;
 import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.User;
 import java.util.Date;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +34,7 @@ public class ConnectionRepresentation {
         User exist = userDao.getById(u.getEmail());
         HttpHeaders responseHeaders = new HttpHeaders();
         
-        if(exist != null && u.getMdp().equals(exist.getMdp())){
+        if(exist != null && exist.getMdp().equals(DigestUtils.sha1Hex(u.getMdp()))){
             SessionUser nvSession = new SessionUser();
             nvSession.setDateDeb(new Date());
             nvSession.setUser(exist);
