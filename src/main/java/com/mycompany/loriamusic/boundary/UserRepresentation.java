@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +57,7 @@ public class UserRepresentation {
     }
     
     //POST
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User u){
         String mdpHash = DigestUtils.sha1Hex(u.getMdp());

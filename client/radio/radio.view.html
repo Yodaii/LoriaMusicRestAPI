@@ -1,0 +1,48 @@
+<div class="row">
+       <div class = "col-md-2 ">
+    <a href="#!/login" class="btn btn-primary w100">Deconnexion</a>
+       </div>
+    <div>
+        <form id ="searchBar" action="#">
+            <div class="col-md-4 col-md-offset-1">
+                <md-content>
+                    <md-autocomplete required
+                        ng-disabled="isDisabled"
+                        md-no-cache="noCache"
+                        md-selected-item="selectedItem"
+                        md-search-text="searchText"
+                        md-items="item in searchTextChange(searchText)"
+                        md-item-text="item.artist + '' + item.name"
+                        md-min-length="1"
+                        placeholder="Rechercher une musique">
+                        <md-item-template>
+                          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.artist}} {{item.name}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Aucune musique n'a été trouvé pour : "{{searchText}}".
+                        </md-not-found>
+                        <div ng-messages="testForm.autocomplete.$error">
+                            <div ng-message="required">This field is required</div>
+                        </div>
+                    </md-autocomplete>
+                </md-content>
+            </div>
+            <div class="col-md-2">
+                 <p><input type="submit" value="Search" class="form-control btn btn-primary w100"></p>
+            </div>
+
+
+
+
+            
+        </form>
+    </div>
+    <div class = "col-md-2 col-md-offset-1">
+      <a href="#!/nav" class="btn btn-primary w100">Navigation</a>
+  </div>
+</div>
+<div class ="row">
+    <div class = "col-md-6 col-md-offset-3">
+        <div id="results"></div>
+    </div>
+</div>
