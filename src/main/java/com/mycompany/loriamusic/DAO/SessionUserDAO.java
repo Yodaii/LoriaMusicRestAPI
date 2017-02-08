@@ -75,7 +75,7 @@ public class SessionUserDAO {
     public SessionUser getCurrentSession(User user) {
         Session currentSession = sessionFactory.getCurrentSession();
 
-        String hql = "SELECT se FROM SessionUser se WHERE se.user=:user AND se.dateFin IS NULL";
+        String hql = "SELECT se FROM SessionUser se WHERE se.user=:user AND se.end_date IS NULL";
         Query query = currentSession.createQuery(hql);
         query.setParameter("user", user);
 
