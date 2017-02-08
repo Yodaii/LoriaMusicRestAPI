@@ -44,10 +44,9 @@ public class Random extends AbstractAlgorithm {
         List<Track> tracksToReturn = new ArrayList<>();
 
         if (!tracks.isEmpty()) {
-            int compteur = 0;
             while (tracksToReturn.size() < 3 && tracksToReturn.size() != tracks.size()) {
-                tracksToReturn.add(tracks.get(compteur));
-                compteur++;
+                int random = (int)(Math.random()*(tracks.size() ));
+                tracksToReturn.add(tracks.get(random));
             }
         }
 

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping(value = "/reco", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,6 +79,7 @@ public class RecommendationRepresentation {
     }
 
     //GET une instance
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrack}")
     public ResponseEntity<?> getRecommendationsListening(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack) {
         User user = userDao.getById(idUser);

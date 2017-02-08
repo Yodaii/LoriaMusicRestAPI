@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping(value="/connection", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -28,6 +29,7 @@ public class ConnectionRepresentation {
     SessionUserDAO sessionUserDao;
     
     //POST
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
         User exist = userDao.getById(u.getEmail());

@@ -1,0 +1,13 @@
+﻿a {
+    cursor: pointer;
+}
+form, #results { padding: 0 20px; }
+.w100 { width: 100%; }
+.h100 { height: 100% }
+#player {margin-left: 20%;}
+img.displayed {
+    display: block;
+    margin-top: 80px;
+    margin-left: auto;
+    margin-right: auto }
+.border {border-right: 1px solid #ddd;}

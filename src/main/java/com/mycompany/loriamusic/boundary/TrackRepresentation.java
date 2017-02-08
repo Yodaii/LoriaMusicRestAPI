@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping(value = "/track", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,6 +75,7 @@ public class TrackRepresentation {
     }
 
     //GET une instance
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
     public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
         Spotify spotify = new Spotify();
@@ -138,6 +140,7 @@ public class TrackRepresentation {
     }
 
     //GET une instance
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{trackid}")
     public ResponseEntity<?> getOneTrack(@PathVariable("trackid") String id) {
         return Optional.ofNullable(trackDao.getById(id))
