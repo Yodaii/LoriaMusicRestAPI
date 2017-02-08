@@ -24,11 +24,11 @@ public class SessionUser implements Serializable {
     @Column(name = "id_session")
     private long id_session;
     
-    @Column(name = "date_debut", nullable = false)
-    private Date dateDeb;
+    @Column(name = "begin_date", nullable = false)
+    private Date begin_date;
     
-    @Column(name = "date_fin", nullable = true)
-    private Date dateFin;
+    @Column(name = "end_date", nullable = true)
+    private Date end_date;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user", nullable = false)
@@ -49,20 +49,20 @@ public class SessionUser implements Serializable {
         this.id_session = id_session;
     }
 
-    public Date getDateDeb() {
-        return dateDeb;
+    public Date getBegin_date() {
+        return begin_date;
     }
 
-    public void setDateDeb(Date dateDeb) {
-        this.dateDeb = dateDeb;
+    public void setBegin_date(Date dateDeb) {
+        this.begin_date = dateDeb;
     }
 
-    public Date getDateFinn() {
-        return dateFin;
+    public Date getEnd_date() {
+        return end_date;
     }
 
-    public void setDateFin(Date dateFin) {
-        this.dateFin = dateFin;
+    public void setEnd_date(Date dateFin) {
+        this.end_date = dateFin;
     }
 
     public User getUser() {

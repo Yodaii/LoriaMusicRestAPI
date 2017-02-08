@@ -235,7 +235,7 @@ public class Spotify {
             JSONArray genres = results.getJSONArray("genres");
             for (int i = 0; i < genres.length(); i++) {
                 Genre g = new Genre();
-                g.setNom(genres.getString(i));
+                g.setName(genres.getString(i));
                 genresArtist.add(g);
             }
             artistToUpdate.setPopularity(results.getInt("popularity"));

@@ -17,8 +17,8 @@ public class Algorithm implements Serializable {
     @Column(name = "id_algo")
     private long id_algo;
     
-    @Column(name = "nom", nullable = false, length = 100)
-    private String nom;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
     public Algorithm() {
     }
@@ -31,11 +31,11 @@ public class Algorithm implements Serializable {
         this.id_algo = id_algo;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String nom) {
+        this.name = nom;
     }
 }

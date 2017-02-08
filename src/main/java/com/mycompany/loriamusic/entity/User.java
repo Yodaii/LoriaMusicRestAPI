@@ -17,14 +17,14 @@ public class User implements Serializable {
     @Column(name = "email", length = 100)
     private String email;
     
-    @Column(name = "nom", nullable = false, length = 100)
-    private String nom;
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String first_name;
     
-    @Column(name = "prenom", nullable = false, length = 100)
-    private String prenom;
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String last_name;
     
-    @Column(name = "mot_de_passe", nullable = false, length = 100)
-    private String mdp;
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
 
     @OneToMany(mappedBy="user")
     @JsonIgnore
@@ -34,20 +34,20 @@ public class User implements Serializable {
     }
 
 
-    public String getNom() {
-        return nom;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setLast_name(String nom) {
+        this.last_name = nom;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getfFirst_name() {
+        return first_name;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setFirst_name(String prenom) {
+        this.first_name = prenom;
     }
 
     public String getEmail() {
@@ -58,12 +58,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getMdp() {
-        return mdp;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
+    public void setPassword(String mdp) {
+        this.password = mdp;
     }
 
     public Set<SessionUser> getSessions() {

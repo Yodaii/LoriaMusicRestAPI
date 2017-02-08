@@ -30,15 +30,14 @@ public class ConnectionRepresentation {
     SessionUserDAO sessionUserDao;
     
     //POST
-    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
         User exist = userDao.getById(u.getEmail());
         HttpHeaders responseHeaders = new HttpHeaders();
         
-        if(exist != null && exist.getMdp().equals(DigestUtils.sha1Hex(u.getMdp()))){
+        if(exist != null && exist.getPassword().equals(DigestUtils.sha1Hex(u.getPassword()))){
             SessionUser nvSession = new SessionUser();
-            nvSession.setDateDeb(new Date());
+            nvSession.setBegin_date(new Date());
             nvSession.setUser(exist);
             sessionUserDao.create(nvSession);
             responseHeaders.setLocation(linkTo(UserRepresentation.class)

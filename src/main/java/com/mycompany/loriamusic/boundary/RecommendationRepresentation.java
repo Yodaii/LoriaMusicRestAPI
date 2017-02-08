@@ -78,7 +78,6 @@ public class RecommendationRepresentation {
     }
 
     //GET une instance
-    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrack}")
     public ResponseEntity<?> getRecommendationsListening(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack) {
         User user = userDao.getById(idUser);
@@ -87,15 +86,14 @@ public class RecommendationRepresentation {
         Listening listening = listeningDao.getListeningTrackSession(session, track);
 
         List<Algorithm> algorithms = algoDao.getAll();
-        List<Track> trackToReturn = new ArrayList<>();
+        List<Recommendation> recoToReturn = new ArrayList<>();
 
         if (!algorithms.isEmpty()) {
             for (Algorithm algo : algorithms) {
                 if (user != null && track != null) {
-                    AbstractAlgorithm abstractAlgo = algoFactory.createAlgorithm(algo.getNom());
+                    AbstractAlgorithm abstractAlgo = algoFactory.createAlgorithm(algo.getName());
                     List<Track> tracks = abstractAlgo.computeRecommendation(user, track);
                     if (!tracks.isEmpty()) {
-                        trackToReturn.addAll(tracks);
                         for (Track t : tracks) {
                             Recommendation reco = new Recommendation();
                             reco.setListening(listening);
@@ -103,6 +101,7 @@ public class RecommendationRepresentation {
                             reco.setIsChoose(false);
                             reco.setNameAlgorithm(abstractAlgo.getNameAlgo());
                             recommendationDao.create(reco);
+                            recoToReturn.add(reco);
                         }
                     }
                 }
@@ -110,8 +109,8 @@ public class RecommendationRepresentation {
             }
         }
 
-        Iterable<Track> iterTracks = trackToReturn;
-        return new ResponseEntity<>(trackToResource(iterTracks), HttpStatus.OK);
+        Iterable<Recommendation> iterReco = recoToReturn;
+        return new ResponseEntity<>(recommendationToResource(iterReco), HttpStatus.OK);
     }
 
     //UPDATE PUT
@@ -159,27 +158,6 @@ public class RecommendationRepresentation {
             return new Resource<>(r, selfLink, collectionLink);
         } else {
             return new Resource<>(r, selfLink);
-        }
-    }
-
-    private Resources<Resource<Track>> trackToResource(Iterable<Track> all) {
-        Link selfLink = linkTo(methodOn(TrackRepresentation.class).getAllTracks())
-                .withSelfRel();
-        List<Resource<Track>> tracks = new ArrayList();
-        all.forEach(track -> tracks.add(trackToResource(track, false)));
-        return new Resources<>(tracks, selfLink);
-    }
-
-    private Resource<Track> trackToResource(Track t, Boolean collection) {
-        Link selfLink = linkTo(TrackRepresentation.class)
-                .slash(t.getId_track())
-                .withSelfRel();
-        if (collection) {
-            Link collectionLink = linkTo(methodOn(TrackRepresentation.class).getAllTracks())
-                    .withRel("collection");
-            return new Resource<>(t, selfLink, collectionLink);
-        } else {
-            return new Resource<>(t, selfLink);
         }
     }
 }

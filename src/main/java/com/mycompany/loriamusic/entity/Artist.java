@@ -18,13 +18,14 @@ import javax.persistence.Table;
 public class Artist implements Serializable {
 
     @Id
-    @Column(name = "nom_artist", length = 100)
-    private String nom;
+    @Column(name = "name_artist", length = 100)
+    private String name;
 
     @Column(name = "popularity", nullable = true)
     private Integer popularity;
     
     @OneToMany(mappedBy="artist")
+    @JsonIgnore
     private Set<Track> tracks;
     
     @ManyToMany(cascade=CascadeType.ALL)  
@@ -35,12 +36,12 @@ public class Artist implements Serializable {
     public Artist() {
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String nom) {
+        this.name = nom;
     }
 
     public Set<Track> getTracks() {

@@ -3,6 +3,7 @@ package com.mycompany.loriamusic.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
@@ -22,23 +23,25 @@ public class Listening implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_ecoute")
-    private long id_ecoute;
+    @Column(name = "id_listening")
+    private long id_listening;
     
-    @Column(name = "aimer", nullable = true)
-    private boolean aimer;
+    @Column(name = "timestamp", nullable = false)
+    private Date timestamp;
+    
+    @Column(name = "liked", nullable = true)
+    private boolean liked;
    
-    @Column(name = "duree", nullable = true)
-    private float duree;
+    @Column(name = "duration", nullable = true)
+    private float duration;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_session", nullable = false)
     @JsonIgnore
     private SessionUser session;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_track", nullable = false)
-    @JsonIgnore
     private Track track;
     
     @OneToMany(mappedBy="listening")
@@ -48,28 +51,28 @@ public class Listening implements Serializable {
     public Listening() {
     }
 
-    public long getId_ecoute() {
-        return id_ecoute;
+    public long getId_listening() {
+        return id_listening;
     }
 
-    public void setId_ecoute(long id_ecoute) {
-        this.id_ecoute = id_ecoute;
+    public void setId_listening(long id_ecoute) {
+        this.id_listening = id_ecoute;
     }
 
-    public boolean isAimer() {
-        return aimer;
+    public boolean isLiked() {
+        return liked;
     }
 
-    public void setAimer(boolean aimer) {
-        this.aimer = aimer;
+    public void setLiked(boolean aimer) {
+        this.liked = aimer;
     }
 
-    public float getDuree() {
-        return duree;
+    public float getDuration() {
+        return duration;
     }
 
-    public void setDuree(float duree) {
-        this.duree = duree;
+    public void setDuration(float duree) {
+        this.duration = duree;
     }
 
     public SessionUser getSession() {
@@ -94,5 +97,13 @@ public class Listening implements Serializable {
 
     public void setRecommendations(Set<Recommendation> recommendations) {
         this.recommendations = recommendations;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

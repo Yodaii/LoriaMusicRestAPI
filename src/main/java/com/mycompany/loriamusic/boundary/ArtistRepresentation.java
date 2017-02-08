@@ -49,7 +49,7 @@ public class ArtistRepresentation {
      //UPDATE PUT
     @PutMapping(value="/{artistnom}")
     public ResponseEntity<?> updateArtist(@RequestBody Artist a, @PathVariable("artistnom") String nom){
-        a.setNom(nom);
+        a.setName(nom);
         Artist artist = artistDao.update(a);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -60,7 +60,7 @@ public class ArtistRepresentation {
         Artist saved = artistDao.create(a);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(ArtistRepresentation.class)
-                .slash(saved.getNom())
+                .slash(saved.getName())
                 .toUri());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
@@ -75,7 +75,7 @@ public class ArtistRepresentation {
     
     private Resource<Artist> artistToResource(Artist a, Boolean collection){
         Link selfLink = linkTo(ArtistRepresentation.class)
-                .slash(a.getNom())
+                .slash(a.getName())
                 .withSelfRel();
         if(collection){
             Link collectionLink = linkTo(methodOn(ArtistRepresentation.class).getAllArtists())

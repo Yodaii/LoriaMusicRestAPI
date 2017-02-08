@@ -73,9 +73,9 @@ public class ListeningRepresentation {
         Listening ecoute = linsteningDao.getListeningTrackSession(sessEcoute, track);
 
         if (aime.equals("true")) {
-            ecoute.setAimer(true);
+            ecoute.setLiked(true);
         } else {
-            ecoute.setAimer(false);
+            ecoute.setLiked(false);
         }
         
         linsteningDao.update(ecoute);
@@ -89,7 +89,7 @@ public class ListeningRepresentation {
         Listening saved = linsteningDao.create(e);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(ListeningRepresentation.class)
-                .slash(saved.getId_ecoute())
+                .slash(saved.getId_listening())
                 .toUri());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
@@ -104,7 +104,7 @@ public class ListeningRepresentation {
 
     private Resource<Listening> ecouteToResource(Listening e, Boolean collection) {
         Link selfLink = linkTo(ListeningRepresentation.class)
-                .slash(e.getId_ecoute())
+                .slash(e.getId_listening())
                 .withSelfRel();
         if (collection) {
             Link collectionLink = linkTo(methodOn(ListeningRepresentation.class).getAllEcoutes())

@@ -17,6 +17,7 @@ import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;
 import com.mycompany.loriamusic.entity.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +76,6 @@ public class TrackRepresentation {
     }
 
     //GET une instance
-    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
     public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
         Spotify spotify = new Spotify();
@@ -86,7 +86,7 @@ public class TrackRepresentation {
 
         if (artist == null) {
             artist = new Artist();
-            artist.setNom(nomArtist);
+            artist.setName(nomArtist);
             ArrayList data = spotify.getArtistMetadata(artist, nomArtist, titreTrack);
             artist = (Artist) data.get(1);
 
@@ -94,7 +94,7 @@ public class TrackRepresentation {
             ArrayList<Genre> genres = (ArrayList<Genre>) data.get(0);
             if (genres != null) {
                 for (Genre g : genres) {
-                    Genre exist = genreDao.getById(g.getNom());
+                    Genre exist = genreDao.getById(g.getName());
 
                     if (exist == null) {
                         genreDao.create(g);
@@ -112,7 +112,7 @@ public class TrackRepresentation {
         if (track == null) {
             if (Youtube.search(nomArtist + " " + titreTrack) != null) {
                 track = new Track();
-                track.setTitre(titreTrack);
+                track.setTitle(titreTrack);
                 track.setArtist(artist);
 
                 // id youtube
@@ -132,6 +132,7 @@ public class TrackRepresentation {
         Listening nvEcoute = new Listening();
         nvEcoute.setSession(sessUser);
         nvEcoute.setTrack(track);
+        nvEcoute.setTimestamp(new Date());
         listeningDao.create(nvEcoute);
 
         return Optional.ofNullable(track)

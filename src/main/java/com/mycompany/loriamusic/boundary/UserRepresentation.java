@@ -57,11 +57,10 @@ public class UserRepresentation {
     }
     
     //POST
-    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User u){
-        String mdpHash = DigestUtils.sha1Hex(u.getMdp());
-        u.setMdp(mdpHash);
+        String mdpHash = DigestUtils.sha1Hex(u.getPassword());
+        u.setPassword(mdpHash);
         User saved = userDao.create(u);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)

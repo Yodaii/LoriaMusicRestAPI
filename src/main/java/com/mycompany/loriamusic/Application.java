@@ -7,6 +7,7 @@ package com.mycompany.loriamusic;
 
 import com.mycompany.loriamusic.algorithm.AlgorithmFactory;
 import com.mycompany.loriamusic.apicall.ImportData;
+import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Track;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -43,6 +44,7 @@ public class Application extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(Track.class);
+        config.exposeIdsFor(Artist.class);
     }
 
     @Autowired

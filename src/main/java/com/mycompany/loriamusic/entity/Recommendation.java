@@ -24,18 +24,18 @@ public class Recommendation implements Serializable {
     private long id_reco;
     
     @Column(name = "is_choose", nullable = false)
+    @JsonIgnore
     private boolean isChoose;
     
-     @Column(name = "name_algorithm", nullable = false)
+    @Column(name = "name_algorithm", nullable = false)
     private String nameAlgorithm;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_track", nullable = false)
-    @JsonIgnore
     private Track track;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_ecoute", nullable = false)
+    @JoinColumn(name = "id_listening", nullable = false)
     @JsonIgnore
     private Listening listening;
 

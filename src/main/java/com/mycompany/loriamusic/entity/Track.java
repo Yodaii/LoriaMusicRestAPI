@@ -20,8 +20,8 @@ public class Track implements Serializable {
     @Column(name = "id_track")
     private String id_track;
 
-    @Column(name = "titre", nullable = false, length = 100)
-    private String titre;
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
 
     @Column(name = "acousticness", nullable = true)
     private Double acousticness;
@@ -62,9 +62,8 @@ public class Track implements Serializable {
     @Column(name = "valence", nullable = true)
     private Double valence;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nom_artist", nullable = false)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "name_artist", nullable = false)
     private Artist artist;
 
     @OneToMany(mappedBy="track")
@@ -86,12 +85,12 @@ public class Track implements Serializable {
         this.id_track = id_track;
     }
 
-    public String getTitre() {
-        return titre;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
+    public void setTitle(String titre) {
+        this.title = titre;
     }
 
     public Artist getArtist() {

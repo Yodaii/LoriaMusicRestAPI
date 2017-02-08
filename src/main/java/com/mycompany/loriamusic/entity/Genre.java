@@ -14,8 +14,8 @@ import javax.persistence.Table;
 @Table(name = "Genre")
 public class Genre implements Serializable {
     @Id
-    @Column(name = "nom_genre", length = 100)
-    private String nom;
+    @Column(name = "name_genre", length = 100)
+    private String name;
     
     @ManyToMany(cascade=CascadeType.ALL, mappedBy="genres")
     @JsonIgnore
@@ -23,12 +23,12 @@ public class Genre implements Serializable {
     
     public Genre(){}
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String nom) {
+        this.name = nom;
     }
 
     public Set<Artist> getArtists() {
