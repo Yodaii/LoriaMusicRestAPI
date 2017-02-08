@@ -68,7 +68,7 @@ public class TrackDAO {
 
         String hql = "SELECT tr FROM Track tr WHERE tr.title=:title AND tr.artist.name=:artist";
         Query query = currentSession.createQuery(hql);
-        query.setParameter("titre", titreTrack);
+        query.setParameter("title", titreTrack);
         query.setParameter("artist", nomArtist);
         
         if(query.list().isEmpty()){
