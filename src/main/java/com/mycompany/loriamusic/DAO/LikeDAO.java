@@ -1,6 +1,7 @@
 package com.mycompany.loriamusic.DAO;
 
 import com.mycompany.loriamusic.entity.Genre;
+import com.mycompany.loriamusic.entity.Like;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class GenreDAO {
-
+public class LikeDAO {
     @Autowired
     SessionFactory sessionFactory;
 
@@ -20,45 +20,45 @@ public class GenreDAO {
     }
 
     /**
-     * Save the genre in the database.
+     * Save the likes in the database.
      */
-    public Genre create(Genre genre) {
+    public Like create(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.save(genre);
-        return genre;
+        currentSession.save(like);
+        return like;
     }
 
     /**
-     * Delete the genre from the database.
+     * Delete the likes from the database.
      */
-    public Genre delete(Genre genre) {
+    public Like delete(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.delete(genre);
-        return genre;
+        currentSession.delete(like);
+        return like;
     }
 
     /**
-     * Return all the genres stored in the database.
+     * Return all the likes stored in the database.
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.createQuery("from Genre").list();
+        return currentSession.createQuery("from Like").list();
     }
 
     /**
-     * Return the genre having the passed id.
+     * Return the like having the passed id.
      */
-    public Genre getById(String nom) {
+    public Like getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.get(Genre.class, nom);
+        return currentSession.get(Like.class, id);
     }
 
     /**
-     * Update the passed genre in the database.
+     * Update the passed like in the database.
      */
-    public Genre update(Genre genre) {
+    public Like update(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.update(genre);
-        return genre;
+        currentSession.update(like);
+        return like;
     }
 }

@@ -1,5 +1,6 @@
 package com.mycompany.loriamusic.DAO;
 
+import com.mycompany.loriamusic.entity.Ban;
 import com.mycompany.loriamusic.entity.Genre;
 import java.util.List;
 import org.hibernate.Session;
@@ -10,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class GenreDAO {
-
+public class BanDAO {
     @Autowired
     SessionFactory sessionFactory;
 
@@ -20,21 +20,21 @@ public class GenreDAO {
     }
 
     /**
-     * Save the genre in the database.
+     * Save the ban in the database.
      */
-    public Genre create(Genre genre) {
+    public Ban create(Ban ban) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.save(genre);
-        return genre;
+        currentSession.save(ban);
+        return ban;
     }
 
     /**
-     * Delete the genre from the database.
+     * Delete the ban from the database.
      */
-    public Genre delete(Genre genre) {
+    public Ban delete(Ban ban) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.delete(genre);
-        return genre;
+        currentSession.delete(ban);
+        return ban;
     }
 
     /**
@@ -42,23 +42,23 @@ public class GenreDAO {
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.createQuery("from Genre").list();
+        return currentSession.createQuery("from Ban").list();
     }
 
     /**
-     * Return the genre having the passed id.
+     * Return the ban having the passed id.
      */
-    public Genre getById(String nom) {
+    public Ban getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.get(Genre.class, nom);
+        return currentSession.get(Ban.class, id);
     }
 
     /**
-     * Update the passed genre in the database.
+     * Update the passed ban in the database.
      */
-    public Genre update(Genre genre) {
+    public Ban update(Ban ban) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.update(genre);
-        return genre;
+        currentSession.update(ban);
+        return ban;
     }
 }

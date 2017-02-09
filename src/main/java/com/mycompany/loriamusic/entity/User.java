@@ -30,9 +30,16 @@ public class User implements Serializable {
     @JsonIgnore
     private Set<SessionUser> sessions;
     
+    @OneToMany(mappedBy="user")
+    @JsonIgnore
+    private Set<Like> likes;
+    
+    @OneToMany(mappedBy="user")
+    @JsonIgnore
+    private Set<Ban> bans;
+    
     public User() {
     }
-
 
     public String getLast_name() {
         return last_name;
@@ -72,5 +79,21 @@ public class User implements Serializable {
 
     public void setSessions(Set<SessionUser> sessions) {
         this.sessions = sessions;
+    }
+
+    public Set<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Like> likes) {
+        this.likes = likes;
+    }
+
+    public Set<Ban> getBans() {
+        return bans;
+    }
+
+    public void setBans(Set<Ban> bans) {
+        this.bans = bans;
     }
 }
