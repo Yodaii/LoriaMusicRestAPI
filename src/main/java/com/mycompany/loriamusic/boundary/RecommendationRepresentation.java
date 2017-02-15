@@ -71,6 +71,7 @@ public class RecommendationRepresentation {
      * @param idTrack: track id of the track listened
      * @return the list of recommendations
      */
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrack}")
     public ResponseEntity<?> getRecommendationsListening(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack) {
         User user = userDao.getById(idUser);
