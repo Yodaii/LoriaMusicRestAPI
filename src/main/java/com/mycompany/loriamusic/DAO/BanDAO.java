@@ -1,6 +1,6 @@
 package com.mycompany.loriamusic.DAO;
 
-import com.mycompany.loriamusic.entity.Ban;
+import com.mycompany.loriamusic.entity.Baned;
 import com.mycompany.loriamusic.entity.Genre;
 import java.util.List;
 import org.hibernate.Session;
@@ -28,7 +28,7 @@ public class BanDAO {
      * @param ban: the ban to create
      * @return the ban created
      */
-    public Ban create(Ban ban) {
+    public Baned create(Baned ban) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.save(ban);
         return ban;
@@ -39,7 +39,7 @@ public class BanDAO {
      * @param ban: the ban to delete
      * @return the ban deleted
      */
-    public Ban delete(Ban ban) {
+    public Baned delete(Baned ban) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.delete(ban);
         return ban;
@@ -59,9 +59,9 @@ public class BanDAO {
      * @param id: the id of the ban
      * @return the ban selected
      */
-    public Ban getById(long id) {
+    public Baned getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.get(Ban.class, id);
+        return currentSession.get(Baned.class, id);
     }
 
     /**
@@ -69,7 +69,7 @@ public class BanDAO {
      * @param ban: the ban to update
      * @return the ban updated
      */
-    public Ban update(Ban ban) {
+    public Baned update(Baned ban) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.update(ban);
         return ban;

@@ -6,8 +6,8 @@ import com.mycompany.loriamusic.DAO.ListeningDAO;
 import com.mycompany.loriamusic.DAO.SessionUserDAO;
 import com.mycompany.loriamusic.DAO.TrackDAO;
 import com.mycompany.loriamusic.DAO.UserDAO;
-import com.mycompany.loriamusic.entity.Ban;
-import com.mycompany.loriamusic.entity.Like;
+import com.mycompany.loriamusic.entity.Baned;
+import com.mycompany.loriamusic.entity.Liked;
 import com.mycompany.loriamusic.entity.Listening;
 import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;
@@ -102,14 +102,14 @@ public class ListeningRepresentation {
 
         if (aime.equals("true")) {
             ecoute.setLiked(true);
-            Like like = new Like(); 
+            Liked like = new Liked(); 
             like.setTimestamp(new Date());
             like.setTrack(track);
             like.setUser(user);
             likeDao.create(like);
         } else {
             ecoute.setLiked(false);
-            Ban ban = new Ban();
+            Baned ban = new Baned();
             ban.setTimestamp(new Date());
             ban.setTrack(track);
             ban.setUser(user);

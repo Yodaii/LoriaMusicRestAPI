@@ -17,8 +17,8 @@ import javax.persistence.Table;
  * @author Yohann Vaubourg & Arthur Flambeau
  */
 @Entity
-@Table(name = "Ban")
-public class Ban implements Serializable {
+@Table(name = "Baned")
+public class Baned implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_ban")
@@ -35,7 +35,7 @@ public class Ban implements Serializable {
     @JoinColumn(name = "id_track", nullable = false)
     private Track track;
     
-    public Ban(){
+    public Baned(){
     }
 
     public long getId_ban() {

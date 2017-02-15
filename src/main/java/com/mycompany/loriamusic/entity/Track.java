@@ -80,11 +80,11 @@ public class Track implements Serializable {
     
     @OneToMany(mappedBy="track")
     @JsonIgnore
-    private Set<Like> likes;
+    private Set<Liked> likes;
     
     @OneToMany(mappedBy="track")
     @JsonIgnore
-    private Set<Ban> bans;
+    private Set<Baned> bans;
     
 
     public Track() {
@@ -234,19 +234,19 @@ public class Track implements Serializable {
         this.recommendations = recommendations;
     }
 
-    public Set<Like> getLikes() {
+    public Set<Liked> getLikes() {
         return likes;
     }
 
-    public void setLikes(Set<Like> likes) {
+    public void setLikes(Set<Liked> likes) {
         this.likes = likes;
     }
 
-    public Set<Ban> getBans() {
+    public Set<Baned> getBans() {
         return bans;
     }
 
-    public void setBans(Set<Ban> bans) {
+    public void setBans(Set<Baned> bans) {
         this.bans = bans;
     }
     

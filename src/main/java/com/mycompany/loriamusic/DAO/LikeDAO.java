@@ -1,7 +1,7 @@
 package com.mycompany.loriamusic.DAO;
 
 import com.mycompany.loriamusic.entity.Genre;
-import com.mycompany.loriamusic.entity.Like;
+import com.mycompany.loriamusic.entity.Liked;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,7 +28,7 @@ public class LikeDAO {
      * @param like: the like to create
      * @return the like created
      */
-    public Like create(Like like) {
+    public Liked create(Liked like) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.save(like);
         return like;
@@ -39,7 +39,7 @@ public class LikeDAO {
      * @param like: the like to delete
      * @return the like deleted
      */
-    public Like delete(Like like) {
+    public Liked delete(Liked like) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.delete(like);
         return like;
@@ -59,9 +59,9 @@ public class LikeDAO {
      * @param id: the id of the like
      * @return the like selected
      */
-    public Like getById(long id) {
+    public Liked getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        return currentSession.get(Like.class, id);
+        return currentSession.get(Liked.class, id);
     }
 
     /**
@@ -69,7 +69,7 @@ public class LikeDAO {
      * @param like: the like to update
      * @return the like updated
      */
-    public Like update(Like like) {
+    public Liked update(Liked like) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.update(like);
         return like;

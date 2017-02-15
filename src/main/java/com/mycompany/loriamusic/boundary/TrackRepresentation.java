@@ -12,7 +12,6 @@ import com.mycompany.loriamusic.DAO.UserDAO;
 import com.mycompany.loriamusic.entity.Artist;
 import com.mycompany.loriamusic.entity.Listening;
 import com.mycompany.loriamusic.entity.Genre;
-import com.mycompany.loriamusic.entity.Recommendation;
 import com.mycompany.loriamusic.entity.SessionUser;
 import com.mycompany.loriamusic.entity.Track;
 import com.mycompany.loriamusic.entity.User;
@@ -78,8 +77,8 @@ public class TrackRepresentation {
 
     //GET une instance
     @CrossOrigin(origins = "http://localhost:8081")
-    @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
-    public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
+    @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}/{mode}")
+    public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack, @PathVariable("mode") String mode) {
         Spotify spotify = new Spotify();
 
         User user = userDao.getById(idUser);
@@ -92,7 +91,7 @@ public class TrackRepresentation {
             ArrayList data = spotify.getArtistMetadata(artist, nomArtist, titreTrack);
             artist = (Artist) data.get(1);
 
-            Set<Genre> genresArtist = new HashSet<Genre>();
+            Set<Genre> genresArtist = new HashSet<>();
             ArrayList<Genre> genres = (ArrayList<Genre>) data.get(0);
             if (genres != null) {
                 for (Genre g : genres) {
@@ -125,7 +124,7 @@ public class TrackRepresentation {
 
                 trackDao.create(track);
             }
-        } else if (track.getId_track() != Youtube.search(track.getId_track())) {
+        } else if (!track.getId_track().equals(Youtube.search(track.getId_track()))) {
             track.setId_track(Youtube.search(nomArtist + " " + titreTrack));
             trackDao.update(track);
         }
@@ -134,6 +133,7 @@ public class TrackRepresentation {
         Listening nvEcoute = new Listening();
         nvEcoute.setSession(sessUser);
         nvEcoute.setTrack(track);
+        nvEcoute.setMode(mode);
         nvEcoute.setTimestamp(new Date());
         listeningDao.create(nvEcoute);
 

@@ -36,11 +36,11 @@ public class User implements Serializable {
     
     @OneToMany(mappedBy="user")
     @JsonIgnore
-    private Set<Like> likes;
+    private Set<Liked> likes;
     
     @OneToMany(mappedBy="user")
     @JsonIgnore
-    private Set<Ban> bans;
+    private Set<Baned> bans;
     
     public User() {
     }
@@ -85,19 +85,19 @@ public class User implements Serializable {
         this.sessions = sessions;
     }
 
-    public Set<Like> getLikes() {
+    public Set<Liked> getLikes() {
         return likes;
     }
 
-    public void setLikes(Set<Like> likes) {
+    public void setLikes(Set<Liked> likes) {
         this.likes = likes;
     }
 
-    public Set<Ban> getBans() {
+    public Set<Baned> getBans() {
         return bans;
     }
 
-    public void setBans(Set<Ban> bans) {
+    public void setBans(Set<Baned> bans) {
         this.bans = bans;
     }
 }

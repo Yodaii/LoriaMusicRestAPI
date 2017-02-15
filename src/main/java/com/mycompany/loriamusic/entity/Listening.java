@@ -39,6 +39,9 @@ public class Listening implements Serializable {
     @Column(name = "duration", nullable = true)
     private float duration;
     
+    @Column(name = "mode", nullable = false)
+    private String mode;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_session", nullable = false)
     @JsonIgnore
@@ -109,5 +112,13 @@ public class Listening implements Serializable {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

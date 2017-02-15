@@ -17,8 +17,8 @@ import javax.persistence.Table;
  * @author Yohann Vaubourg & Arthur Flambeau
  */
 @Entity
-@Table(name = "Like")
-public class Like implements Serializable {
+@Table(name = "Liked")
+public class Liked implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_like")
@@ -35,7 +35,7 @@ public class Like implements Serializable {
     @JoinColumn(name = "id_track", nullable = false)
     private Track track;
     
-    public Like(){
+    public Liked(){
     }
 
     public long getId_like() {
