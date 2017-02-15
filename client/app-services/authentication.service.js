@@ -34,7 +34,7 @@
             return $http({
               method: 'POST',
               url: 'http://localhost:8080/connection',
-              data: {"email": username, "mdp": password}
+              data: {"email": username, "password": password}
           }).then(function(greeting) {
             response = { success: true };
             callback(response);
@@ -56,10 +56,10 @@
             }
         };
 
-            // set default auth header for http requests
+            // auth header par défaut pour les requêtes http
             $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata;
 
-            // store user details in globals cookie that keeps user logged in for 1 week (or until they logout)
+            // permet de laisser user connecté pdnt 1 semaine en le stockant dans cookie global
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 7);
             $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
@@ -79,7 +79,7 @@
     }
 }
 
-    // Base64 encoding service used by AuthenticationService
+    // Encodage base 64 utilisé par AuthenticationService
     var Base64 = {
 
         keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -124,7 +124,7 @@
             var enc1, enc2, enc3, enc4 = "";
             var i = 0;
 
-            // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+            // regex enleve tout ce qui est pas : A-Z, a-z, 0-9, +, /, or =
             var base64test = /[^A-Za-z0-9\+\/\=]/g;
             if (base64test.exec(input)) {
                 window.alert("There were invalid base64 characters in the input text.\n" +

@@ -39,6 +39,7 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
       {
         $rootScope.form_data.name = $scope.selectedItem.name;
         $rootScope.form_data.artist = $scope.selectedItem.artist;
+        $location.path('/radio');
       }
       //si non, appel à api lasfm pour corriger ce qu'il a écris
       else
@@ -69,6 +70,7 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
       {
         $rootScope.form_data.name = $scope.selectedItem.name;
         $rootScope.form_data.artist = $scope.selectedItem.artist;
+        $location.path('/nav');
       }
       //si non, appel à api lasfm pour corriger ce qu'il a écris
       else

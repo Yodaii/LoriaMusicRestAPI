@@ -69,6 +69,7 @@ public class TrackRepresentation {
     RecommendationDAO recommendatioDao;
 
     //GET
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping
     public ResponseEntity<?> getAllTracks() {
         Iterable<Track> allTracks = trackDao.getAll();
@@ -76,6 +77,7 @@ public class TrackRepresentation {
     }
 
     //GET une instance
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{nomArtist}/{titreTrack}")
     public ResponseEntity<?> getSearchTrack(@PathVariable("idUser") String idUser, @PathVariable("nomArtist") String nomArtist, @PathVariable("titreTrack") String titreTrack) {
         Spotify spotify = new Spotify();

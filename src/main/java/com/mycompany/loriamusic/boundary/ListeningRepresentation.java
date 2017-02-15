@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping(value = "/ecoute", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,6 +64,7 @@ public class ListeningRepresentation {
     }
 
     //UPDATE PUT
+    @CrossOrigin(origins = "http://localhost:8081")
     @PutMapping(value = "/{idUser}/{idTrack}/{aime}")
     public ResponseEntity<?> updateEcoute(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack, @PathVariable("aime") String aime) {
         User user = userDao.getById(idUser);
