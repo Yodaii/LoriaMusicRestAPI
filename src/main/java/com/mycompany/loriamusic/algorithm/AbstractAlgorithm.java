@@ -1,7 +1,9 @@
 package com.mycompany.loriamusic.algorithm;
 
 import com.mycompany.loriamusic.DAO.ArtistDAO;
+import com.mycompany.loriamusic.DAO.BanDAO;
 import com.mycompany.loriamusic.DAO.GenreDAO;
+import com.mycompany.loriamusic.DAO.LikeDAO;
 import com.mycompany.loriamusic.DAO.ListeningDAO;
 import com.mycompany.loriamusic.DAO.RecommendationDAO;
 import com.mycompany.loriamusic.DAO.SessionUserDAO;
@@ -32,6 +34,12 @@ public abstract class AbstractAlgorithm {
 
     @Autowired
     ListeningDAO listeningDao;
+    
+    @Autowired
+    BanDAO banDao;
+
+    @Autowired
+    LikeDAO likeDao;
  
     @Autowired
     RecommendationDAO recommendatioDao;
