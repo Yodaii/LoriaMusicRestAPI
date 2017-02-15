@@ -41,6 +41,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy="user")
     @JsonIgnore
     private Set<Baned> bans;
+   
+    // algo
     
     public User() {
     }

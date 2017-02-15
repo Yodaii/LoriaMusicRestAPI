@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+/**
+ * Rest controller for calls on connection URL 
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @RestController
 @RequestMapping(value="/connection", produces=MediaType.APPLICATION_JSON_VALUE)
 @ExposesResourceFor(User.class)
@@ -29,7 +33,12 @@ public class ConnectionRepresentation {
     @Autowired
     SessionUserDAO sessionUserDao;
     
-    //POST
+    /**
+     * Method which check if the user exist in the database
+     * If the user exist a session is created
+     * @param u: user to identify
+     * @return OK if exist NOT FOUND otherwise
+     */
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
@@ -37,10 +46,10 @@ public class ConnectionRepresentation {
         HttpHeaders responseHeaders = new HttpHeaders();
         
         if(exist != null && exist.getPassword().equals(DigestUtils.sha1Hex(u.getPassword()))){
-            SessionUser nvSession = new SessionUser();
-            nvSession.setBegin_date(new Date());
-            nvSession.setUser(exist);
-            sessionUserDao.create(nvSession);
+            SessionUser newSession = new SessionUser();
+            newSession.setBegin_date(new Date());
+            newSession.setUser(exist);
+            sessionUserDao.create(newSession);
             responseHeaders.setLocation(linkTo(UserRepresentation.class)
                 .slash(exist.getEmail())
                 .toUri());

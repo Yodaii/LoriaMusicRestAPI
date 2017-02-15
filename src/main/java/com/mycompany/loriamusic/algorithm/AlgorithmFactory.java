@@ -13,9 +13,9 @@ public class AlgorithmFactory {
     @Autowired
     private Random random;
     
-    public AbstractAlgorithm createAlgorithm(String nom){
+    public AbstractAlgorithm createAlgorithm(String name){
        
-        if(nom.equals("random")){
+        if(name.equals("random")){
             return random;
         }
         

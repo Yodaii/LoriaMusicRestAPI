@@ -30,13 +30,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+/**
+ * Rest controller for calls on reco URL 
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @RestController
 @RequestMapping(value = "/reco", produces = MediaType.APPLICATION_JSON_VALUE)
 @ExposesResourceFor(Recommendation.class)
@@ -62,23 +65,12 @@ public class RecommendationRepresentation {
     @Autowired
     AlgorithmFactory algoFactory;
 
-    //GET
-    @GetMapping
-    public ResponseEntity<?> getAllRecommendations() {
-        Iterable<Recommendation> allRecommandations = recommendationDao.getAll();
-        return new ResponseEntity<>(recommendationToResource(allRecommandations), HttpStatus.OK);
-    }
-
-    //GET une instance
-    @GetMapping(value = "/{recoid}")
-    public ResponseEntity<?> getOneRecommendation(@PathVariable("recoid") Long id) {
-        return Optional.ofNullable(recommendationDao.getById(id))
-                .map(found -> new ResponseEntity(recommendationToResource(found, true), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    //GET une instance
-    @CrossOrigin(origins = "http://localhost:8081")
+    /**
+     * Method which return the recommendations of the differents algorithms in the database for a specific listening
+     * @param idUser: user id who listen a track
+     * @param idTrack: track id of the track listened
+     * @return the list of recommendations
+     */
     @GetMapping(value = "/{idUser}/{idTrack}")
     public ResponseEntity<?> getRecommendationsListening(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack) {
         User user = userDao.getById(idUser);
@@ -110,11 +102,17 @@ public class RecommendationRepresentation {
             }
         }
 
-        Iterable<Recommendation> iterReco = recoToReturn;
-        return new ResponseEntity<>(recommendationToResource(iterReco), HttpStatus.OK);
+        return new ResponseEntity<>(recoToReturn, HttpStatus.OK);
     }
 
-    //GET
+    /**
+     * Method which indicate if a recommendation has been selected by the user
+     * @param idUser: user id of the listening
+     * @param idTrackEcoute: track id of the track actually play
+     * @param idTrackReco: track id of the recommendation clicked
+     * @param nomAlgo: algorithm name of the recommendation
+     * @return NO CONTENT
+     */
     @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrackEcoute}/{idTrackReco}/{nomAlgo}")
     public ResponseEntity<?> updateRecommendation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco, @PathVariable("nomAlgo") String nomAlgo) {
@@ -122,44 +120,12 @@ public class RecommendationRepresentation {
         SessionUser sessUser = sessionUserDao.getCurrentSession(user);
 
         Track trackListening = trackDao.getById(idTrackEcoute);
-        Listening ecouteSess = listeningDao.getListeningTrackSession(sessUser, trackListening);
+        Listening listeningSess = listeningDao.getListeningTrackSession(sessUser, trackListening);
 
         Track trackRecommendation = trackDao.getById(idTrackReco);
         
-        recommendationDao.setChooseRecommendation(ecouteSess, trackRecommendation, nomAlgo);
+        recommendationDao.setChooseRecommendation(listeningSess, trackRecommendation, nomAlgo);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    //POST
-    @PostMapping
-    public ResponseEntity<?> saveRecommendation(@RequestBody Recommendation r) {
-        Recommendation saved = recommendationDao.create(r);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setLocation(linkTo(RecommendationRepresentation.class)
-                .slash(saved.getId_reco())
-                .toUri());
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
-    }
-
-    private Resources<Resource<Recommendation>> recommendationToResource(Iterable<Recommendation> all) {
-        Link selfLink = linkTo(methodOn(RecommendationRepresentation.class).getAllRecommendations())
-                .withSelfRel();
-        List<Resource<Recommendation>> recommandations = new ArrayList();
-        all.forEach(recommandation -> recommandations.add(recommendationToResource(recommandation, false)));
-        return new Resources<>(recommandations, selfLink);
-    }
-
-    private Resource<Recommendation> recommendationToResource(Recommendation r, Boolean collection) {
-        Link selfLink = linkTo(RecommendationRepresentation.class)
-                .slash(r.getId_reco())
-                .withSelfRel();
-        if (collection) {
-            Link collectionLink = linkTo(methodOn(RecommendationRepresentation.class).getAllRecommendations())
-                    .withRel("collection");
-            return new Resource<>(r, selfLink, collectionLink);
-        } else {
-            return new Resource<>(r, selfLink);
-        }
     }
 }
