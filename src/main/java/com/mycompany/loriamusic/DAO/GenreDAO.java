@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class Genre
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class GenreDAO {
@@ -21,6 +25,8 @@ public class GenreDAO {
 
     /**
      * Save the genre in the database.
+     * @param genre: the genre to create
+     * @return the genre created
      */
     public Genre create(Genre genre) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -30,6 +36,8 @@ public class GenreDAO {
 
     /**
      * Delete the genre from the database.
+     * @param genre: the genre to delete
+     * @return the genre deleted
      */
     public Genre delete(Genre genre) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -39,6 +47,7 @@ public class GenreDAO {
 
     /**
      * Return all the genres stored in the database.
+     * @return the list of all the genre
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -47,6 +56,8 @@ public class GenreDAO {
 
     /**
      * Return the genre having the passed id.
+     * @param nom: the name of the genre
+     * @return the genre selected
      */
     public Genre getById(String nom) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -55,6 +66,8 @@ public class GenreDAO {
 
     /**
      * Update the passed genre in the database.
+     * @param genre: the genre to update
+     * @return the genre updated
      */
     public Genre update(Genre genre) {
         Session currentSession = sessionFactory.getCurrentSession();

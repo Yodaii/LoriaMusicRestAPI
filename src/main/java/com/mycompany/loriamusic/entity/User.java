@@ -9,6 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * User class
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Entity
 @Table(name = "User")
 public class User implements Serializable {

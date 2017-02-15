@@ -41,7 +41,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class ListeningRepresentation {
 
     @Autowired
-    ListeningDAO linsteningDao;
+    ListeningDAO listeningDao;
 
     @Autowired
     SessionUserDAO sessionUserDao;
@@ -61,18 +61,33 @@ public class ListeningRepresentation {
     //GET
     @GetMapping
     public ResponseEntity<?> getAllEcoutes() {
-        Iterable<Listening> allEcoutes = linsteningDao.getAll();
+        Iterable<Listening> allEcoutes = listeningDao.getAll();
         return new ResponseEntity<>(ecouteToResource(allEcoutes), HttpStatus.OK);
     }
 
     //GET une instance
     @GetMapping(value = "/{ecouteid}")
     public ResponseEntity<?> getOneEcoute(@PathVariable("ecouteid") Long id) {
-        return Optional.ofNullable(linsteningDao.getById(id))
+        return Optional.ofNullable(listeningDao.getById(id))
                 .map(found -> new ResponseEntity(ecouteToResource(found, true), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    
+    @GetMapping(value = "/{idUser}/{idTrack}/{timeListen}")
+    public ResponseEntity<?> updateEcoute(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack, @PathVariable("timeListen") long timeListen) {
+        User user = userDao.getById(idUser);
+        Track track = trackDao.getById(idTrack);
+        
+        SessionUser sessEcoute = sessionUserDao.getCurrentSession(user);
 
+        Listening ecoute = listeningDao.getListeningTrackSession(sessEcoute, track);
+        
+        ecoute.setDuration(timeListen);
+        listeningDao.update(ecoute); 
+        
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
     //UPDATE PUT
     @PutMapping(value = "/{idUser}/{idTrack}/{aime}")
     public ResponseEntity<?> updateEcoute(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack, @PathVariable("aime") String aime) {
@@ -81,7 +96,7 @@ public class ListeningRepresentation {
 
         SessionUser sessEcoute = sessionUserDao.getCurrentSession(user);
 
-        Listening ecoute = linsteningDao.getListeningTrackSession(sessEcoute, track);
+        Listening ecoute = listeningDao.getListeningTrackSession(sessEcoute, track);
 
         if (aime.equals("true")) {
             ecoute.setLiked(true);
@@ -99,7 +114,7 @@ public class ListeningRepresentation {
             banDao.create(ban);
         }
         
-        linsteningDao.update(ecoute);
+        listeningDao.update(ecoute);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -107,7 +122,7 @@ public class ListeningRepresentation {
     //POST
     @PostMapping
     public ResponseEntity<?> saveEcoute(@RequestBody Listening e) {
-        Listening saved = linsteningDao.create(e);
+        Listening saved = listeningDao.create(e);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(ListeningRepresentation.class)
                 .slash(saved.getId_listening())

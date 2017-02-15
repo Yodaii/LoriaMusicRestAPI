@@ -12,6 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Track class
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Entity
 @Table(name = "Track")
 public class Track implements Serializable {

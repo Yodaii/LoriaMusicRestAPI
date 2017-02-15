@@ -21,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Class who call the Spotify API
  * @author Amaury
  */
 public class Spotify {

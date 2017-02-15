@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class User
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class UserDAO {
@@ -21,6 +25,8 @@ public class UserDAO {
     
     /**
      * Save the user in the database.
+     * @param user: the user to create
+     * @return the user created
      */
     public User create(User user) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -30,6 +36,8 @@ public class UserDAO {
 
     /**
      * Delete the user from the database.
+     * @param user: the user to delete
+     * @return the user deleted
      */
     public User delete(User user) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -39,6 +47,7 @@ public class UserDAO {
 
     /**
      * Return all the users stored in the database.
+     * @return the list of all the users
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -47,6 +56,8 @@ public class UserDAO {
 
     /**
      * Return the user having the passed id.
+     * @param email: the email of the user
+     * @return user selected
      */
     public User getById(String email) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -55,6 +66,8 @@ public class UserDAO {
 
     /**
      * Update the passed user in the database.
+     * @param user: the user to update
+     * @return the user updated
      */
     public User update(User user) {
         Session currentSession = sessionFactory.getCurrentSession();

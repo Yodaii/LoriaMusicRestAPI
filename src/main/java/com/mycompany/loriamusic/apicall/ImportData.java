@@ -27,6 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+/**
+ * Class who import a list of track at the launch of the application
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Service
 public class ImportData {
 //    @Autowired

@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Recommendation class
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Entity
 @Table(name = "Recommendation")
 public class Recommendation implements Serializable {

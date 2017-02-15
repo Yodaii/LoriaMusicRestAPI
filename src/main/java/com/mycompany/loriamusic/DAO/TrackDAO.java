@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class Track
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class TrackDAO {
@@ -22,6 +26,8 @@ public class TrackDAO {
     
     /**
      * Save the user in the database.
+     * @param track: the track to create
+     * @return the track created
      */
     public Track create(Track track) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -31,6 +37,8 @@ public class TrackDAO {
 
     /**
      * Delete the track from the database.
+     * @param track: the track to delete
+     * @return the track deleted
      */
     public Track delete(Track track) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -40,6 +48,7 @@ public class TrackDAO {
 
     /**
      * Return all the tracks stored in the database.
+     * @return the list of all the tracks
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -48,6 +57,8 @@ public class TrackDAO {
 
     /**
      * Return the track having the passed id.
+     * @param id: the id of the track
+     * @return the track selected
      */
     public Track getById(String id) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -56,6 +67,8 @@ public class TrackDAO {
 
     /**
      * Update the passed track in the database.
+     * @param track: the track to update
+     * @return the track updated
      */
     public Track update(Track track) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -63,6 +76,12 @@ public class TrackDAO {
         return track;
     }
 
+    /**
+     * Return the track having the passed title and artist's name
+     * @param titreTrack: the title of the track
+     * @param nomArtist: the artist's name of the track
+     * @return the track selected
+     */
     public Track searchTrack(String titreTrack, String nomArtist) {
         Session currentSession = sessionFactory.getCurrentSession();
 

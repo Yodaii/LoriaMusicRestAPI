@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class SessionUser
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class SessionUserDAO {
@@ -23,6 +27,8 @@ public class SessionUserDAO {
 
     /**
      * Save the session in the database.
+     * @param session: the session to create
+     * @return the session created
      */
     public SessionUser create(SessionUser session) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -32,6 +38,8 @@ public class SessionUserDAO {
 
     /**
      * Delete the session from the database.
+     * @param session: the session to delete
+     * @return the session deleted
      */
     public SessionUser delete(SessionUser session) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -41,6 +49,7 @@ public class SessionUserDAO {
 
     /**
      * Return all the session stored in the database.
+     * @return the list of all the sessions
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -49,6 +58,8 @@ public class SessionUserDAO {
 
     /**
      * Return the session having the passed id.
+     * @param id: the id of the session
+     * @return the session selected
      */
     public SessionUser getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -57,6 +68,8 @@ public class SessionUserDAO {
 
     /**
      * Update the passed session in the database.
+     * @param session: the session to update
+     * @return the session updated
      */
     public SessionUser update(SessionUser session) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -64,18 +77,24 @@ public class SessionUserDAO {
         return session;
     }
 
-    /*
-    *  Close current session of the user
+    /**
+     * Close current session of the user
+     * @param user: the user of the session
      */
     public void endSessionUser(User user) {
         SessionUser session = getCurrentSession(user);
         this.update(session);
     }
 
+    /**
+     * Return the current session of the passed user 
+     * @param user: the user of the session
+     * @return the session selected
+     */
     public SessionUser getCurrentSession(User user) {
         Session currentSession = sessionFactory.getCurrentSession();
 
-        String hql = "SELECT se FROM SessionUser se WHERE se.user=:user AND se.end_date IS NULL";
+        String hql = "SELECT se FROM SessionUser se WHERE se.user=:user AND se.end_date IS NULL ORDER BY se.begin_date DESC";
         Query query = currentSession.createQuery(hql);
         query.setParameter("user", user);
 

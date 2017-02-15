@@ -15,6 +15,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Abstract class of the algorithm's factory
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Service
 public abstract class AbstractAlgorithm {
     @Autowired
@@ -44,7 +48,17 @@ public abstract class AbstractAlgorithm {
     @Autowired
     RecommendationDAO recommendatioDao;
     
+    /**
+     * Return the recommendations for a specific user and track
+     * @param user: an user
+     * @param track: a track
+     * @return the list of the calculated recommendations
+     */
     public abstract List<Track> computeRecommendation(User user, Track track);
     
+    /**
+     * Return the name of the algorithm
+     * @return the name of the algoritm
+     */
     public abstract String getNameAlgo();
 }

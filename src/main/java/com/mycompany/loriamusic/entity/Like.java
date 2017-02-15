@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Like class
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Entity
 @Table(name = "Like")
 public class Like implements Serializable {

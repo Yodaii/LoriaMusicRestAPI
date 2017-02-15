@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Ban class
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Entity
 @Table(name = "Ban")
 public class Ban implements Serializable {

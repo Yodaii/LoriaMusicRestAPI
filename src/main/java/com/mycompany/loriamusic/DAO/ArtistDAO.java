@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class Artist
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class ArtistDAO {
@@ -21,6 +25,8 @@ public class ArtistDAO {
 
     /**
      * Save the artist in the database.
+     * @param artist: the artist to create
+     * @return the artist created
      */
     public Artist create(Artist artist) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -30,6 +36,8 @@ public class ArtistDAO {
 
     /**
      * Delete the artist from the database.
+     * @param artist: the artist to delete
+     * @return the artist deleted
      */
     public Artist delete(Artist artist) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -39,6 +47,7 @@ public class ArtistDAO {
 
     /**
      * Return all the artists stored in the database.
+     * @return the list of all the artist
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -47,6 +56,8 @@ public class ArtistDAO {
 
     /**
      * Return the artist having the passed id.
+     * @param id: the id of the artist
+     * @return the artist selected
      */
     public Artist getById(String id) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -55,6 +66,8 @@ public class ArtistDAO {
 
     /**
      * Update the passed artist in the database.
+     * @param artist the artist to update
+     * @return the artist updated
      */
     public Artist update(Artist artist) {
         Session currentSession = sessionFactory.getCurrentSession();

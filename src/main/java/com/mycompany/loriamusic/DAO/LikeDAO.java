@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class Like
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class LikeDAO {
@@ -21,6 +25,8 @@ public class LikeDAO {
 
     /**
      * Save the likes in the database.
+     * @param like: the like to create
+     * @return the like created
      */
     public Like create(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -30,6 +36,8 @@ public class LikeDAO {
 
     /**
      * Delete the likes from the database.
+     * @param like: the like to delete
+     * @return the like deleted
      */
     public Like delete(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -39,6 +47,7 @@ public class LikeDAO {
 
     /**
      * Return all the likes stored in the database.
+     * @return the list of all the likes
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -47,6 +56,8 @@ public class LikeDAO {
 
     /**
      * Return the like having the passed id.
+     * @param id: the id of the like
+     * @return the like selected
      */
     public Like getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -55,6 +66,8 @@ public class LikeDAO {
 
     /**
      * Update the passed like in the database.
+     * @param like: the like to update
+     * @return the like updated
      */
     public Like update(Like like) {
         Session currentSession = sessionFactory.getCurrentSession();

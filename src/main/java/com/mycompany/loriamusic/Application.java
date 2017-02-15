@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.loriamusic;
 
 import com.mycompany.loriamusic.algorithm.AlgorithmFactory;
@@ -28,8 +23,11 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+/**
+ * Principal class of the program who configure spring and launch the application
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Configuration
 @EnableTransactionManagement
 @PropertySource({"classpath:application.properties"})

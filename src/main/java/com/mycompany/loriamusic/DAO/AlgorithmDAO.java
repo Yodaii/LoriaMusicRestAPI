@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * DAO for the class Algorithm
+ * @author Yohann Vaubourg & Arthur Flambeau
+ */
 @Repository
 @Transactional
 public class AlgorithmDAO {
@@ -21,6 +25,8 @@ public class AlgorithmDAO {
 
     /**
      * Save the algorithm in the database.
+     * @param algo: the algorithm to create
+     * @return the algorithm created
      */
     public Algorithm create(Algorithm algo) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -30,6 +36,8 @@ public class AlgorithmDAO {
 
     /**
      * Delete the algorithm from the database.
+     * @param algo: the algorithm to delete
+     * @return the algorithm deleted
      */
     public Algorithm delete(Algorithm algo) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -39,6 +47,7 @@ public class AlgorithmDAO {
 
     /**
      * Return all the algorithms stored in the database.
+     * @return the list of all the algorithms
      */
     public List getAll() {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -47,6 +56,8 @@ public class AlgorithmDAO {
 
     /**
      * Return the algorithm having the passed id.
+     * @param id: the id of the algorithm
+     * @return the algorithm selecteds
      */
     public Algorithm getById(long id) {
         Session currentSession = sessionFactory.getCurrentSession();
@@ -55,6 +66,8 @@ public class AlgorithmDAO {
 
     /**
      * Update the passed algorithm in the database.
+     * @param algo: the algorithm to update
+     * @return the algorithm updated
      */
     public Algorithm update(Algorithm algo) {
         Session currentSession = sessionFactory.getCurrentSession();
