@@ -34,7 +34,7 @@
             return $http({
               method: 'POST',
               url: 'http://localhost:8080/user',
-              data: {"nom": user.nom, "prenom": user.prenom, "email": user.email, "mdp": user.mot_de_passe}
+              data: {"last_name": user.nom, "first_name": user.prenom, "email": user.email, "password": user.mot_de_passe}
             }).
             then(handleSuccess, handleError('Error creating user'));
         }

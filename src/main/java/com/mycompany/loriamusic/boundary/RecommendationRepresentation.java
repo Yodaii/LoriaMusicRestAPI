@@ -78,6 +78,7 @@ public class RecommendationRepresentation {
     }
 
     //GET une instance
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrack}")
     public ResponseEntity<?> getRecommendationsListening(@PathVariable("idUser") String idUser, @PathVariable("idTrack") String idTrack) {
         User user = userDao.getById(idUser);
@@ -113,7 +114,8 @@ public class RecommendationRepresentation {
         return new ResponseEntity<>(recommendationToResource(iterReco), HttpStatus.OK);
     }
 
-    //UPDATE PUT
+    //GET
+    @CrossOrigin(origins = "http://localhost:8081")
     @GetMapping(value = "/{idUser}/{idTrackEcoute}/{idTrackReco}/{nomAlgo}")
     public ResponseEntity<?> updateRecommendation(@PathVariable("idUser") String idUser, @PathVariable("idTrackEcoute") String idTrackEcoute, @PathVariable("idTrackReco") String idTrackReco, @PathVariable("nomAlgo") String nomAlgo) {
         User user = userDao.getById(idUser);

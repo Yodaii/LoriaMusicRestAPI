@@ -1,4 +1,6 @@
-﻿(function () {
+﻿(
+ // Utilisé pour les essai en local
+    function () {
     'use strict';
 
     angular
@@ -44,7 +46,6 @@
         function Create(user) {
             var deferred = $q.defer();
 
-            // simulate api call with $timeout
             $timeout(function () {
                 GetByUsername(user.prenom)
                     .then(function (duplicateUser) {
@@ -53,11 +54,10 @@
                         } else {
                             var users = getUsers();
 
-                            // assign id
                             var lastUser = users[users.length - 1] || { id: 0 };
                             user.id = lastUser.id + 1;
 
-                            // save to local storage
+                            // sauvegarde en local
                             users.push(user);
                             setUsers(users);
 
@@ -102,7 +102,6 @@
             return deferred.promise;
         }
 
-        // private functions
 
         function getUsers() {
             if(!localStorage.users){

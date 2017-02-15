@@ -30,6 +30,7 @@ public class ConnectionRepresentation {
     SessionUserDAO sessionUserDao;
     
     //POST
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
         User exist = userDao.getById(u.getEmail());
