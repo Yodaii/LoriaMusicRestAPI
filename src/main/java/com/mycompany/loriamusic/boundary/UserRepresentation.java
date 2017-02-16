@@ -1,6 +1,8 @@
 package com.mycompany.loriamusic.boundary;
 
+import com.mycompany.loriamusic.DAO.AlgorithmDAO;
 import com.mycompany.loriamusic.DAO.UserDAO;
+import com.mycompany.loriamusic.entity.Algorithm;
 import com.mycompany.loriamusic.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class UserRepresentation {
     @Autowired
     UserDAO userDao;
     
+    @Autowired
+    AlgorithmDAO algoDao;
+    
     /**
      * Method wich insert a new user in the database
      * @param u: user to insert
@@ -37,6 +42,10 @@ public class UserRepresentation {
     public ResponseEntity<?> saveUser(@RequestBody User u){
         String passwordHash = DigestUtils.sha1Hex(u.getPassword());
         u.setPassword(passwordHash);
+        
+        Algorithm algo = algoDao.getById((int)( Math.random()*( 3 - 1 + 1 ) ) + 1);
+        u.setAlgorithm(algo);
+        
         User saved = userDao.create(u);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setLocation(linkTo(UserRepresentation.class)

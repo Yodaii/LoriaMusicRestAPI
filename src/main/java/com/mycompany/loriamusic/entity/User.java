@@ -5,7 +5,10 @@ import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -29,6 +32,10 @@ public class User implements Serializable {
     
     @Column(name = "password", nullable = false, length = 100)
     private String password;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_algo", nullable = false)
+    private Algorithm algorithm;
 
     @OneToMany(mappedBy="user")
     @JsonIgnore
@@ -101,5 +108,13 @@ public class User implements Serializable {
 
     public void setBans(Set<Baned> bans) {
         this.bans = bans;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
 }

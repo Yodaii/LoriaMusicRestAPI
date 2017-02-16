@@ -1,11 +1,14 @@
 package com.mycompany.loriamusic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -25,6 +28,10 @@ public class Algorithm implements Serializable {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @OneToMany(mappedBy="algorithm")
+    @JsonIgnore
+    private Set<User> users;
+    
     public Algorithm() {
     }
 
@@ -42,5 +49,13 @@ public class Algorithm implements Serializable {
 
     public void setName(String nom) {
         this.name = nom;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

@@ -43,19 +43,16 @@ public class ConnectionRepresentation {
     @PostMapping
     public ResponseEntity<?> getUser(@RequestBody User u){
         User exist = userDao.getById(u.getEmail());
-        HttpHeaders responseHeaders = new HttpHeaders();
         
         if(exist != null && exist.getPassword().equals(DigestUtils.sha1Hex(u.getPassword()))){
             SessionUser newSession = new SessionUser();
             newSession.setBegin_date(new Date());
             newSession.setUser(exist);
             sessionUserDao.create(newSession);
-            responseHeaders.setLocation(linkTo(UserRepresentation.class)
-                .slash(exist.getEmail())
-                .toUri());
-            return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+            
+            return new ResponseEntity<>(exist, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, responseHeaders, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         
     }
