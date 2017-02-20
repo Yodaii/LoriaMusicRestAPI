@@ -8,8 +8,8 @@
   .controller('NavController', NavController);
 
 
-  NavController.$inject = ['UserService', '$rootScope', '$http','$scope','autoComplete','$location'];
-  function NavController(UserService, $rootScope, $http,$scope,autoComplete,$location) {
+  NavController.$inject = ['LastFMAPI','UserService', '$rootScope', '$http','$scope','autoComplete','$location'];
+  function NavController(LastFMAPI,UserService, $rootScope, $http,$scope,autoComplete,$location) {
 
       var player;
       var onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
@@ -26,45 +26,67 @@
       $scope.algo1 = "";
       $scope.algo2 = "";
       $scope.algo3 = "";
+       // Catch the item selected by the user
+      // For further information check : https://material.angularjs.org/latest/api/directive/mdAutocomplete
       $scope.selectedItemChange = function (item) {
-          //alert("Item Changed");
+       // alert("Item Changed");
       }
       $scope.searchTextChange = function (str) {
       return autoComplete.SearchBarAutoComplete(str);
       }
+      // API call when the user hit the like button
       $scope.like=function(){
         vm.showLike = false;
          $http({
-            // TODO modifier appel API pour passer les paramtres nécessaires pour insertion écoute et choix algo en bdd
+
               method: 'PUT',
-              url: 'http://localhost:8080/ecoute/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+'true'
+              url: 'http://localhost:8080/listening/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+'true'
           }).then(function(response){
-            //console.log("Sauvegarde du choix recommendations ok");
           },function(error){
             console.log("Erreur dans sauvegarde du choix like");
           });
       }
+      // API call when the user hit the dislike button
       $scope.unlike=function(){
         vm.showLike = false;
         $http({
-            // TODO modifier appel API pour passer les paramtres nécessaires pour insertion écoute et choix algo en bdd
+            
               method: 'PUT',
-              url: 'http://localhost:8080/ecoute/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+'false'
+              url: 'http://localhost:8080/listening/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+'false'
           }).then(function(response){
-            //console.log("Sauvegarde du choix recommendations ok");
           },function(error){
             console.log("Erreur dans sauvegarde du choix de ban");
           });
       }
+      // API call when the user hit the next button, then load the next vid
       $scope.next = function(){
-         console.log(player.getCurrentTime());
+        $http({
+              method: 'GET',
+              url: 'http://localhost:8080/listening/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+player.getCurrentTime()
+          }).then(function(response){
+            console.log("Sauvegarde du temps d'écoute de la musique ok");
+          },function(error){
+            console.log("Erreur dans sauvegarde du temps d'écoute de la musique");
+          });
+      if(algoChoisi === 3)
+      {
+        loadNextByAlgoIg(3);
+      } else if (algoChoisi === 6){
+        loadNextByAlgoIg(6);
+      } else {
+        loadNextByAlgoIg(0);
       }
-    // A l'arrivée sur la page
+        console.log(player.getCurrentTime());
+      }
+    // When the page is loaded for the first time, check if a search has been set
     if( $rootScope.form_data && $rootScope.form_data.name!=undefined )
     {
+      console.log("nav loeaded once");
+      $rootScope.globals.type = "nav";
       vm.dataLoading = true;
       var name = $rootScope.form_data.name ;
       var artist = $rootScope.form_data.artist;
+      // get the video from our API with the text search
       getYoutubeId(name,artist,function (response){
         if (response.success) {
           if($scope.vids)
@@ -77,7 +99,7 @@
               url: 'http://localhost:8080/reco/'+$rootScope.globals.currentUser.username+'/'+response.videoId
           }).then(function(response) {
             
-            response.data._embedded.recommendations.forEach(function(data) {
+            response.data.forEach(function(data) {
             var add = {name: data.track.title , artist : data.track.artist.name, id_track : data.track.id_track ,nomAlgo : data.nameAlgorithm};
             $scope.vids.push(add);
             
@@ -93,12 +115,13 @@
             response = { success: false, message: 'Impossible de charger la vidéo' };
             
         });
-          
+        // if the player already exist, reload with the new video id
         if(player){
           changeVid(response.videoId);
           $rootScope.form_data.id_track = response.videoId;
           
         }
+        // if the player don't exist, create it with the video id
         else{
           vm.showLike = true;
           vm.dataLoading = false;
@@ -114,13 +137,42 @@
                 }
       });
     }
-    // Suite au click sur bouton Rechercher
+    // When the user search from this page
     $(function() {
       $("form").on("submit", function(e) {
-       e.preventDefault();
-       $rootScope.form_data.name = $scope.selectedItem.name;
-       $rootScope.form_data.artist =$scope.selectedItem.artist;
-        getYoutubeId($rootScope.form_data.name,$rootScope.form_data.artist,function (response){
+      $rootScope.globals.type = "nav";
+      e.preventDefault();
+        if($scope.selectedItem)
+      {
+        $rootScope.form_data.name = $scope.selectedItem.name;
+        $rootScope.form_data.artist = $scope.selectedItem.artist;
+        loadVid();
+      }
+      //if not, call lastfm API to correct it
+      else
+      {
+        LastFMAPI.search($scope.searchText, function(response){
+          if(response.success)
+          {
+            $rootScope.form_data.name =response.name;
+            $rootScope.form_data.artist = response.artist;
+            loadVid();
+
+          }
+          else
+          {
+            $rootScope.form_data.name =null;
+            $rootScope.form_data.artist = null;
+            alert("votre recherche n'a renvoyer aucun résultat");
+          }
+        });
+      }
+     });
+    }); 
+
+    // function called to load video only if the title is found on the API, to be able to catch if the user selected an item and wrote something else, leading to an inconclusive result
+   function loadVid(){
+      getYoutubeId($rootScope.form_data.name,$rootScope.form_data.artist,function (response){
         if (response.success) {
           vm.reco=true;
           vm.recoLoading=true;
@@ -133,11 +185,12 @@
               url: 'http://localhost:8080/reco/'+$rootScope.globals.currentUser.username+'/'+response.videoId
           }).then(function(response) {
             
-            response.data._embedded.recommendations.forEach(function(data) {
+            response.data.forEach(function(data) {
             var add = {name: data.track.title , artist : data.track.artist.name, id_track : data.track.id_track ,nomAlgo : data.nameAlgorithm};
             $scope.vids.push(add);
 
           });
+            // Set name of the choosen algo to send it to our API calls
             $scope.algo1 = $scope.vids[0].nomAlgo;
             $scope.algo2 = $scope.vids[2].nomAlgo;
             $scope.algo3 = $scope.vids[5].nomAlgo;
@@ -165,18 +218,15 @@
                   alert("Erreur de communication avec youtube, faites une nouvelle recherche");
                 }
       });
-       
-     });
-      $(window).on("resize", resetVideoHeight);
-    }); 
+    }
 
-    // Fais appel à notre API, afin de chercher id et informations vidéo en BDD, si non présent, insertion BDD et retour informations
+    // Call our API to get the id corresponding with the title and the artist in parameters, if not exist, add in our dataBase
     function getYoutubeId(name,artist,callback){
       var data = $rootScope.form_data;
              var response;
             return $http({
               method: 'GET',
-              url: 'http://localhost:8080/track/'+$rootScope.globals.currentUser.username+'/'+artist+'/'+name
+              url: 'http://localhost:8080/track/'+$rootScope.globals.currentUser.username+'/'+artist+'/'+name+'/'+$rootScope.globals.type
           }).then(function(response) {
 
             response = { success: true, titre: response.data.titre , videoId: response.data.id_track };
@@ -186,8 +236,16 @@
             callback(response);
         });
     } 
-  // Click sur l'une des proposition des algorithmes, on envoi alors à l'API ce changement (nom user, vidéo en cours, vidéo choisie, id algo)
+  // Function called when user click on one recommendation from algorithms, it load the video on iframe, reload list of recommendation, and stock the selected algo
    $scope.modify = function(i,col) {
+     $http({
+              method: 'GET',
+              url: 'http://localhost:8080/listening/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track+'/'+player.getCurrentTime()
+          }).then(function(response){
+            console.log("Sauvegarde du temps d'écoute de la musique ok");
+          },function(error){
+            console.log("Erreur dans sauvegarde du temps d'écoute de la musique");
+    });
     var x = i + col;
     var videoEnCours = $rootScope.form_data.id_track;
     algoChoisi = col;
@@ -196,11 +254,9 @@
     $rootScope.form_data.id_track =$scope.vids[x].id_track;
     var nomAlgoChoisis = $scope.vids[x].nomAlgo;
     $http({
-            // TODO modifier appel API pour passer les paramtres nécessaires pour insertion écoute et choix algo en bdd
               method: 'GET',
               url: 'http://localhost:8080/reco/'+$rootScope.globals.currentUser.username+'/'+videoEnCours+'/'+$rootScope.form_data.id_track+'/'+nomAlgoChoisis
           }).then(function(response){
-            //console.log("Sauvegarde du choix recommendations ok");
           },function(error){
             console.log("Erreur dans sauvegarde du choix recommendations");
           });
@@ -216,12 +272,11 @@
           }
           
           $http({
-            // TODO modifier appel API pour passer les paramtres nécessaires pour insertion écoute et choix algo en bdd
               method: 'GET',
               url: 'http://localhost:8080/reco/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track
           }).then(function(response) {
             
-            response.data._embedded.recommendations.forEach(function(data) {
+            response.data.forEach(function(data) {
             var add = {name: data.track.title , artist : data.track.artist.name, id_track : data.track.id_track ,nomAlgo : data.nameAlgorithm};
             $scope.vids.push(add);
           });
@@ -239,7 +294,7 @@
                   
         });
       }
-      // Fonction permettant d'initialiser le player youtube grâce à API youtube
+     // Create the youtube iFrame
     function onYouTubeIframeAPIReady(str) {
 
         player = new YT.Player('player', {
@@ -256,26 +311,9 @@
       player.loadVideoById(videoId, 0, "default");
     }
 
-    // Detection de mise en pause de la vidéo
-  
+  // Envent that happens on the player
   function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.PAUSED && !done) {
-    
-    // fin vidéo --> prendre la première vidéo de l'algo choisis précédemment par user, défaut 1 -- OK
-    // Nom des algos dans le json -- OK
-    // Likes ok
-    // Skin nn
-    // vérification information inscription 
-    // deconnexion de l'autre coté et dans fermeture de la fenêtre 
-    // Base de données en anglais -- OK
-
-
-    // Importanter !
-    // noms algos / j'aime - bannir / stockerModeNav ou radio / click ou Next
-    // AJouter TimeStamp dans consultation d'une vidéo
-    // + timestamp sur bouton JM / JMpas
-    // Ajouter table like/ban avec idUser,idTrack,timeStamp
-    }
+    // load next video
     if (event.data == YT.PlayerState.ENDED && !done) {
       
       console.log(algoChoisi);
@@ -290,6 +328,7 @@
     }
 
   }
+    // Load next video with the selected algorithm
   function loadNextByAlgoIg(idAlgo){
       $rootScope.form_data.name = $scope.vids[idAlgo].name;
       console.log($rootScope.form_data.name);
@@ -309,7 +348,7 @@
                 url: 'http://localhost:8080/reco/'+$rootScope.globals.currentUser.username+'/'+$rootScope.form_data.id_track
             }).then(function(response) {
               
-              response.data._embedded.recommendations.forEach(function(data) {
+              response.data.forEach(function(data) {
               var add = {name: data.track.title , artist : data.track.artist.name , id_track : data.track.id_track,nomAlgo : data.nameAlgorithm};
               $scope.vids.push(add);
             });
@@ -329,26 +368,21 @@
   }
 }
 })();
-/*// Amené à disparaitre 
-function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
-// Aussi
-function resetVideoHeight() {
-      $(".video").css("height", $("#results").width() * 9/16);
-    }*/
-// Initialisation de notre clé API youtube
+
+// Init Youtube API key
 function init() {
       gapi.client.setApiKey("AIzaSyD5ImYyyM8eVEnAkvnI06AxBZX8KSB-3p4");
       gapi.client.load("youtube", "v3", function() {
         // yt api is ready
       });
     }
-// Lorsque le player est pret, on play la vidéo automatiquement
+// Play video automatically when player is ready
 function onPlayerReady(event) {
   event.target.playVideo();
 }
 
 
-// Arret de la vidéo
+// Stop of the video
 function stopVideo() {
   player.stopVideo();
 }

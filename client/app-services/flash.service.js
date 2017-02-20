@@ -6,6 +6,7 @@
         .factory('FlashService', FlashService);
 
     FlashService.$inject = ['$rootScope'];
+    // Used to use the flash message to alert some information to the user
     function FlashService($rootScope) {
         var service = {};
 
@@ -27,7 +28,7 @@
                     if (!flash.keepAfterLocationChange) {
                         delete $rootScope.flash;
                     } else {
-                        // ne garde que pour 1 changement de location
+                        // keep only for 1 location change
                         flash.keepAfterLocationChange = false;
                     }
                 }

@@ -1,3 +1,4 @@
+// Used by autocomplete
 angular.module('ymusica').directive('typeahead', ["$timeout", function($timeout) {
     return {
         restrict: 'E',

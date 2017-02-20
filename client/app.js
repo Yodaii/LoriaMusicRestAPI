@@ -1,12 +1,13 @@
 ﻿(function () {
     'use strict';
-// Pour le truc de loading utiliser librairie spinner
+// injection of tool used for redirection and autocompletion
     angular
         .module('app', ['ngRoute', 'ngCookies','ngMaterial'])
         .config(config)
         .run(run);
 
     config.$inject = ['$routeProvider', '$locationProvider'];
+    // definition of every controller for each views
     function config($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
@@ -21,12 +22,12 @@
                 controllerAs: 'vm'
             })
 
-            .when('/register', {
+            .when('/register/', {
                 controller: 'RegisterController',
                 templateUrl: 'register/register.view.html',
                 controllerAs: 'vm'
             })
-            .when('/search', {
+            .when('/search/', {
                 controller: 'SearchController',
                 templateUrl: 'search/search.view.html',
                 controllerAs: 'vm'
@@ -43,10 +44,9 @@
             })
             .otherwise({ redirectTo: '/login' });
     }
-
+    // initialisation of rootscope data
     run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
     function run($rootScope, $location, $cookies, $http) {
-        // garder info de recherche d'une page à l'autre
         $rootScope.form_data = {};
         var player;
         // keep user logged in after page refresh

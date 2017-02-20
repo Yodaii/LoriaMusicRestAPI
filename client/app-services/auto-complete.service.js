@@ -6,7 +6,7 @@
 	.factory('autoComplete', function ($http, $q) {
 
 		return {
-
+			// Call of the lastFM API for the autocomplete
 			SearchBarAutoComplete: function(str) {
 
 				var reponse;

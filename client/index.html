@@ -25,15 +25,10 @@
     <script src="app-services/authentication.service.js"></script>
     <script src="app-services/flash.service.js"></script>
 
-    <!-- Real user service that uses an api -->
-    <!-- <script src="app-services/user.service.js"></script> -->
-
-    <!-- Fake user service for demo that uses local storage -->
     <script src="app-services/user.service.js"></script>
     <script src="app-services/lastfm-api.service.js"></script>
     <script src="app-services/auto-complete.service.js"></script>
 
-    <script src="home/home.controller.js"></script>
     <script src="login/login.controller.js"></script>
     <script src="register/register.controller.js"></script>
     <script src="nav/nav.controller.js"></script>
@@ -42,6 +37,37 @@
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
 
     <script src="http://www.youtube.com/player_api"></script>
+    <script>
+    window.onbeforeunload = function() { return "You work will be lost."; };
+    window.onload = function () {
+    if (typeof history.pushState === "function") {
+        history.pushState("jibberish", null, null);
+        window.onpopstate = function () {
+            history.pushState('newjibberish', null, null);
+            // Handle the back (or forward) buttons here
+            // Will NOT handle refresh, use onbeforeunload for this.
+        };
+    }
+    else {
+        var ignoreHashChange = true;
+        window.onhashchange = function () {
+            if (!ignoreHashChange) {
+                ignoreHashChange = true;
+                window.location.hash = Math.random();
+                // Detect and redirect change here
+                // Works in older FF and IE9
+                // * it does mess with your hash symbol (anchor?) pound sign
+                // delimiter on the end of the URL
+            }
+            else {
+                ignoreHashChange = false;   
+            }
+        };
+    }
+}
+</script>
+
+
 </head>
 <body>
 

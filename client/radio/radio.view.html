@@ -38,11 +38,19 @@
         </form>
     </div>
     <div class = "col-md-2 col-md-offset-1">
-      <a href="#!/nav" class="btn btn-primary w100">Navigation</a>
+      <a href="#!/nav/" class="btn btn-primary w100">Navigation</a>
   </div>
 </div>
 <div class ="row">
-    <div class = "col-md-6 col-md-offset-3">
-        <div id="results"></div>
-    </div>
+
+    <div id="player"></div>
+     <img class="displayed" ng-if="vm.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+</div>
+<div class = "row" > 
+  <div class = "col-md-2 col-md-offset-5">
+    <span class="glyphicon glyphicon-thumbs-up displayed" style="font-size:3em;" ng-click="like()" ng-if="vm.showLike" ></span>
+    <span class="glyphicon glyphicon-thumbs-down displayed" style="font-size:3em;" ng-click="unlike()" ng-if="vm.showLike" ></span>
+    <span class="glyphicon glyphicon-hand-right" style="font-size:3em;" ng-click="next()" ng-if="vm.reco" ></span>
+  </div>
 </div>

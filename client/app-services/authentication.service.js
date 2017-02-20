@@ -14,28 +14,16 @@
         service.ClearCredentials = ClearCredentials;
 
         return service;
-
+        // Log the user in the database
         function Login(username, password, callback) {
-                 /*
-                $timeout(function () {
-   
-                var response;
-                UserService.GetByUsername(username)
-                    .then(function (user) {
-                        
-                            response = { success: true };
-                        
-                        callback(response);
-                    });
-            }, 1000);
-            */
-
+        
             var response;
             return $http({
               method: 'POST',
               url: 'http://localhost:8080/connection',
               data: {"email": username, "password": password}
           }).then(function(greeting) {
+            $rootScope.idAlgoRadioUser = greeting.data.algorithm.id_algo;
             response = { success: true };
             callback(response);
         }, function(reason) {
@@ -46,6 +34,7 @@
 
       }
 
+      // Keep the user connected
       function SetCredentials(username, password) {
         var authdata = Base64.encode(username + ':' + password);
 
@@ -64,11 +53,27 @@
             cookieExp.setDate(cookieExp.getDate() + 7);
             $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
         }
-
+        // Log out the user, send the end of the session to the API
         function ClearCredentials() {
+
+            if($rootScope.globals.currentUser)
+            {
+                var nomUser = $rootScope.globals.currentUser.username
+                $http({
+              method: 'PUT',
+              url: 'http://localhost:8080/session/'+nomUser
+            }).then(function(greeting) {
+             console.log("user déconnecté avec succès en bdd")
+            }, function(reason) {
+                 console.log("erreur déconnexion utilisateur en bdd")
+            });
+            }
+            
             $rootScope.globals = {};
             $cookies.remove('globals');
             $http.defaults.headers.common.Authorization = 'Basic';
+
+            
         }
         function handleSuccess(res) {
          callback(rez);
@@ -79,7 +84,7 @@
     }
 }
 
-    // Encodage base 64 utilisé par AuthenticationService
+    // Base 64 encode used by AuthenticationService
     var Base64 = {
 
         keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
@@ -124,7 +129,7 @@
             var enc1, enc2, enc3, enc4 = "";
             var i = 0;
 
-            // regex enleve tout ce qui est pas : A-Z, a-z, 0-9, +, /, or =
+            // regex that keep  : A-Z, a-z, 0-9, +, /, or =
             var base64test = /[^A-Za-z0-9\+\/\=]/g;
             if (base64test.exec(input)) {
                 window.alert("There were invalid base64 characters in the input text.\n" +

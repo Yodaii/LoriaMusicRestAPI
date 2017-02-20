@@ -26,15 +26,15 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
     $scope.selectedItemChange = function (item) {
         //alert("Item Changed");
     }
+    // Search function with the text entered by the user
     $scope.searchTextChange = function (str) {
 
     return autoComplete.SearchBarAutoComplete(str);
     }
    
-    // initialisation des paramètres lorsque l'utilisateur choisis le mode radio
+    // init param when user select radio mode
     function radioSearch(){
-      //vérification, l'utilisateur a t'il choisis un objet dans la liste de proposition ou non
-      //si oui initialisation des paramètres avec les noms déja corrigés
+      //check if user seleted item or not, if not, search with text only
        if($scope.selectedItem)
       {
         $rootScope.form_data.name = $scope.selectedItem.name;
@@ -63,16 +63,15 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
       
     }
 
-    // initialisation des paramètres lorsque l'utilisateur choisis le mode navigation
+    // init param when user select nav mode
     function navSearch(){
-      // voir explications dans radioSearch()
+      //check if user seleted item or not, if not, search with text only
       if($scope.selectedItem)
       {
         $rootScope.form_data.name = $scope.selectedItem.name;
         $rootScope.form_data.artist = $scope.selectedItem.artist;
         $location.path('/nav');
       }
-      //si non, appel à api lasfm pour corriger ce qu'il a écris
       else
       {
         LastFMAPI.search($scope.searchText, function(response){
@@ -86,16 +85,13 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
           {
             $rootScope.form_data.name = "erreur";
             $rootScope.form_data.artist = "erreur";
-            $location.path('/search');
+            $location.path('/search/');
 
           }
         });
       }
       
     };
-   
-   
-
   }
 })();
 

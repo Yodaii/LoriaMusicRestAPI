@@ -10,6 +10,7 @@
                         ng-disabled="isDisabled"
                         md-no-cache="noCache"
                         md-selected-item="selectedItem"
+                        md-selected-item-change="selectedItemChange(item)"
                         md-search-text="searchText"
                         md-items="item in searchTextChange(searchText)"
                         md-item-text="item.artist + '' + item.name"
@@ -33,7 +34,7 @@
         </form>
     </div>
     <div class = "col-md-2 col-md-offset-1">
-      <a href="#!/radio" class="btn btn-primary w100">Radio</a>
+      <a href="#!/radio/" class="btn btn-primary w100">Radio</a>
   </div>
 </div>
 

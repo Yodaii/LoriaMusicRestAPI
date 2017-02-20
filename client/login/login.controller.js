@@ -10,12 +10,12 @@
         var vm = this;
 
         vm.login = login;
-
+        // For the deconnection
         (function initController() {
             // reset login status
             AuthenticationService.ClearCredentials();
         })();
-
+        // For the connection
         function login() {
             vm.dataLoading = true;
             AuthenticationService.Login(vm.username, vm.password, function (response) {

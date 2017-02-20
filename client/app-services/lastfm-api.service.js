@@ -13,10 +13,11 @@
         var artist;
         return service;
 
-       
+       // Serch function to the lastFM API
         function Search(keyword,callback){
 
             var reponse;
+            console.log(keyword);
             return $http({
               method: 'POST',
               url: 'http://ws.audioscrobbler.com/2.0/',
@@ -26,11 +27,20 @@
                'limit=1&'+
                'format=json'
           }).then(function(response) {
-            setResultsLastFM(response.data.results.trackmatches.track);
-            reponse = {success : true,  name:name,artist:artist};
+            // The API can return a result without track if the text match anything, it's catched et we alert the user
+            if(typeof response.data.results.trackmatches.track !== 'undefined' && response.data.results.trackmatches.track.length > 0)
+            { 
+              setResultsLastFM(response.data.results.trackmatches.track);
+              reponse = {success : true,  name:name,artist:artist};
+            }
+            else
+            {
+              
+              reponse = { success : false,message: 'Erreur de l\'une de nos plateforme, veuillez réessayer' };
+            }
             callback(reponse);
         }, function(response) {
-            alert("error");
+            
             reponse = { success : false,message: 'Erreur de l\'une de nos plateforme, veuillez réessayer' };
             callback(reponse);
         });
