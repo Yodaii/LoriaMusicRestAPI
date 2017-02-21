@@ -10,12 +10,13 @@
 
   NavController.$inject = ['LastFMAPI','UserService', '$rootScope', '$http','$scope','autoComplete','$location'];
   function NavController(LastFMAPI,UserService, $rootScope, $http,$scope,autoComplete,$location) {
-
+      console.log("nav controller loeaded once")
       var player;
       var onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
       var changeVid = changeVid;
       var algoChoisi;
       var vm = this;
+
       var done = false;
       $scope.searchText = "";
       $scope.Person = [];
@@ -26,7 +27,17 @@
       $scope.algo1 = "";
       $scope.algo2 = "";
       $scope.algo3 = "";
-       // Catch the item selected by the user
+
+      //essai catch back page
+      $scope.$on('onBeforeUnload', function (e, confirmation) {
+        confirmation.message = "All data willl be lost.";
+        e.preventDefault();
+    });
+    $scope.$on('onUnload', function (e) {
+        console.log('leaving page');
+    });
+
+      // Catch the item selected by the user
       // For further information check : https://material.angularjs.org/latest/api/directive/mdAutocomplete
       $scope.selectedItemChange = function (item) {
        // alert("Item Changed");
@@ -81,7 +92,6 @@
     // When the page is loaded for the first time, check if a search has been set
     if( $rootScope.form_data && $rootScope.form_data.name!=undefined )
     {
-      console.log("nav loeaded once");
       $rootScope.globals.type = "nav";
       vm.dataLoading = true;
       var name = $rootScope.form_data.name ;

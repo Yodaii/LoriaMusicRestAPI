@@ -85,7 +85,7 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
           {
             $rootScope.form_data.name = "erreur";
             $rootScope.form_data.artist = "erreur";
-            $location.path('/search/');
+            $location.path('/search');
 
           }
         });

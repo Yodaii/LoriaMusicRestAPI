@@ -9,9 +9,9 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
   .controller('RadioController', RadioController);
 
 
-  RadioController.$inject = ['LastFMAPI','UserService', '$rootScope','$http','$scope','autoComplete'];
-  function RadioController(LastFMAPI,UserService, $rootScope,$http,$scope,autoComplete) {
-    
+  RadioController.$inject = ['LastFMAPI','UserService', '$rootScope','$http','$scope','autoComplete','$location'];
+  function RadioController(LastFMAPI,UserService, $rootScope,$http,$scope,autoComplete,$location) {
+    console.log("rad controller loeaded once")
       var player;
       var onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
       var changeVid = changeVid;
@@ -25,6 +25,7 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
       $scope.noCache = false;
       var vids= [];
       var nomAlgoChoisi = "";
+
       // Catch the item selected by the user
       // For further information check : https://material.angularjs.org/latest/api/directive/mdAutocomplete
       $scope.selectedItemChange = function (item) {
@@ -84,7 +85,6 @@ var lastfm = 'http://ws.audioscrobbler.com/2.0/?api_key=' + key + '&format=json'
       // When the page is loaded for the first time, check if a search has been set
     if( $rootScope.form_data && $rootScope.form_data.name!=undefined )
     {
-      console.log("rad loeaded once");
       $rootScope.globals.type = "radio";
       // Get the algo used for the user in radio mode
       algoChoisi = $rootScope.idAlgoRadioUser;
